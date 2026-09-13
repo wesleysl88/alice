@@ -1,0 +1,9 @@
+# Livros (copyright) e extrações
+*.pdf
+pdf*_dump.txt
+extracted_pages/
+
+# Rascunhos locais
+test_write.txt
+.DS_Store
+Thumbs.db

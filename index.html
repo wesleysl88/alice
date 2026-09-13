@@ -1,0 +1,4530 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aventuras Monetárias da Alice — Matemática 3º Ano</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400;1,700&family=Fredoka:wght@500;600;700&family=Fira+Code:wght@500;700&display=swap" rel="stylesheet">
+  <!-- Three.js CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+  <style>
+    :root {
+      --primary: #059669;
+      --primary-hover: #047857;
+      --primary-light: #d1fae5;
+      --blue: #2563eb;
+      --blue-light: #dbeafe;
+      --amber: #d97706;
+      --amber-light: #fef3c7;
+      --purple: #7c3aed;
+      --purple-light: #ede9fe;
+      --pink: #db2777;
+      --pink-light: #fce7f3;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --radius: 20px;
+      --radius-sm: 12px;
+      --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+      --shadow-lg: 0 20px 35px -10px rgba(0, 0, 0, 0.08), 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Nunito', system-ui, -apple-system, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      font-size: 18px;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3, h4 {
+      font-family: 'Fredoka', 'Nunito', sans-serif;
+      color: #0f172a;
+      letter-spacing: 0.3px;
+    }
+
+    /* HEADER */
+    .top-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 2px solid var(--border);
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #047857;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .brand-icon {
+      font-size: 1.8rem;
+      animation: coin-wiggle 3s infinite ease-in-out;
+    }
+
+    @keyframes coin-wiggle {
+      0%, 100% { transform: rotate(0deg); }
+      20% { transform: rotate(-12deg); }
+      40% { transform: rotate(12deg); }
+      60% { transform: rotate(-6deg); }
+      80% { transform: rotate(6deg); }
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .stars-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #fef3c7;
+      border: 2px solid #f59e0b;
+      color: #92400e;
+      padding: 6px 16px;
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: 1.1rem;
+      box-shadow: 0 2px 6px rgba(245, 158, 11, 0.2);
+    }
+
+    .btn-ref-guide {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #0284c7;
+      color: white;
+      border: none;
+      padding: 8px 18px;
+      border-radius: 999px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 4px 10px rgba(2, 132, 199, 0.25);
+    }
+
+    .btn-ref-guide:hover {
+      background: #0369a1;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 14px rgba(2, 132, 199, 0.35);
+    }
+
+    .btn-reset {
+      background: #f1f5f9;
+      color: #64748b;
+      border: 1px solid var(--border);
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-reset:hover {
+      background: #fee2e2;
+      color: #dc2626;
+      border-color: #fca5a5;
+    }
+
+    /* MAIN CONTAINER */
+    .app-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 24px 20px 80px;
+    }
+
+    /* 3D ISLAND MENU VIEW */
+    #menu-view {
+      display: block;
+    }
+
+    .hero-banner {
+      text-align: center;
+      margin-bottom: 24px;
+      padding: 24px 20px;
+      background: linear-gradient(135deg, #ecfdf5 0%, #e0f2fe 100%);
+      border-radius: var(--radius);
+      border: 2px solid #a7f3d0;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-banner h1 {
+      font-size: 2.2rem;
+      color: #065f46;
+      margin-bottom: 8px;
+    }
+
+    .hero-banner p {
+      font-size: 1.15rem;
+      color: #334155;
+      max-width: 750px;
+      margin: 0 auto;
+    }
+
+    /* 3D CANVAS WRAPPER */
+    .three-canvas-container {
+      position: relative;
+      width: 100%;
+      height: 380px;
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-bottom: 32px;
+      border: 2px solid #cbd5e1;
+      background: linear-gradient(180deg, #bae6fd 0%, #e0f2fe 70%, #d1fae5 100%);
+      box-shadow: var(--shadow-lg);
+    }
+
+    #three-canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .three-instruction {
+      position: absolute;
+      bottom: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255, 255, 255, 0.9);
+      padding: 6px 18px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #0f172a;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* ISLAND CARDS GRID */
+    .islands-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+      gap: 20px;
+    }
+
+    .island-card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 24px;
+      border: 2px solid var(--border);
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .island-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-lg);
+      border-color: #3b82f6;
+    }
+
+    .island-card-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 12px;
+    }
+
+    .island-icon {
+      font-size: 2.5rem;
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-sm);
+      background: #f1f5f9;
+      flex-shrink: 0;
+    }
+
+    .island-card-title h3 {
+      font-size: 1.3rem;
+      margin-bottom: 2px;
+    }
+
+    .island-pages {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #0284c7;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .island-desc {
+      font-size: 1rem;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+      flex-grow: 1;
+    }
+
+    .island-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid var(--border);
+      padding-top: 14px;
+      margin-top: auto;
+    }
+
+    .island-progress {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: #475569;
+    }
+
+    .btn-enter-island {
+      background: #0f172a;
+      color: white;
+      border: none;
+      padding: 8px 18px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      transition: background 0.2s;
+    }
+
+    .island-card:hover .btn-enter-island {
+      background: #2563eb;
+    }
+
+    /* STUDY VIEW */
+    #study-view {
+      display: none;
+    }
+
+    .study-top-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .btn-back-menu {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: white;
+      border: 2px solid var(--border);
+      color: #334155;
+      padding: 8px 18px;
+      border-radius: 999px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-back-menu:hover {
+      background: #f1f5f9;
+      border-color: #94a3b8;
+    }
+
+    .mission-header-card {
+      background: white;
+      border-radius: var(--radius);
+      padding: 28px;
+      border: 2px solid var(--border);
+      margin-bottom: 28px;
+      box-shadow: var(--shadow);
+    }
+
+    .mission-tag {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      background: #e0f2fe;
+      color: #0369a1;
+    }
+
+    .mission-header-card h2 {
+      font-size: 1.8rem;
+      margin-bottom: 6px;
+    }
+
+    .mission-header-card p {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+    }
+
+    /* PROGRESS BAR */
+    .mission-progress-bar-container {
+      margin-top: 18px;
+      background: #e2e8f0;
+      height: 14px;
+      border-radius: 999px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .mission-progress-bar {
+      background: linear-gradient(90deg, #10b981, #059669);
+      height: 100%;
+      width: 0%;
+      transition: width 0.4s ease;
+      border-radius: 999px;
+    }
+
+    /* QUESTION CARD */
+    .question-card {
+      background: white;
+      border-radius: var(--radius);
+      padding: 30px;
+      border: 2px solid var(--border);
+      margin-bottom: 32px;
+      box-shadow: var(--shadow);
+      transition: border-color 0.2s;
+    }
+
+    .question-card.done {
+      border-color: #a7f3d0;
+      background: #fafffc;
+    }
+
+    .q-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 14px;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .q-page-badge {
+      background: #eff6ff;
+      color: #1d4ed8;
+      font-weight: 800;
+      font-size: 0.95rem;
+      padding: 4px 12px;
+      border-radius: 999px;
+      border: 1px solid #bfdbfe;
+    }
+
+    .q-status-badge {
+      font-weight: 800;
+      font-size: 0.95rem;
+      padding: 4px 14px;
+      border-radius: 999px;
+    }
+
+    .q-status-badge.pending {
+      background: #f1f5f9;
+      color: #64748b;
+    }
+
+    .q-status-badge.complete {
+      background: #d1fae5;
+      color: #065f46;
+      border: 1px solid #6ee7b7;
+    }
+
+    .q-title {
+      font-size: 1.4rem;
+      margin-bottom: 14px;
+      color: #0f172a;
+    }
+
+    .q-story {
+      background: #f8fafc;
+      border-left: 5px solid #0284c7;
+      padding: 16px 20px;
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      margin-bottom: 24px;
+      font-size: 1.15rem;
+      line-height: 1.7;
+    }
+
+    /* TOY GRID & MENU GRID (FROM BOOK) */
+    .toy-grid, .menu-card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 14px;
+      margin: 16px 0;
+    }
+
+    .toy-card, .menu-item {
+      background: white;
+      border: 2px solid #e2e8f0;
+      border-radius: var(--radius-sm);
+      padding: 14px;
+      text-align: center;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+    }
+
+    .toy-icon, .menu-icon {
+      font-size: 2.2rem;
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .toy-name {
+      font-weight: 700;
+      font-size: 1rem;
+      color: #334155;
+      margin-bottom: 4px;
+    }
+
+    .toy-price {
+      font-size: 1.25rem;
+      font-weight: 900;
+      color: #059669;
+    }
+
+    /* SUBQUESTION ITEM */
+    .subquestion-item {
+      margin-bottom: 28px;
+      padding: 20px;
+      background: #ffffff;
+      border: 1.5px solid #e2e8f0;
+      border-radius: var(--radius-sm);
+    }
+
+    .subquestion-text {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 16px;
+    }
+
+    /* RADIO AND CHECKBOX OPTIONS */
+    .options-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .option-label {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 14px 18px;
+      background: #f8fafc;
+      border: 2px solid #cbd5e1;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 1.1rem;
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+
+    .option-label:hover {
+      background: #f1f5f9;
+      border-color: #94a3b8;
+    }
+
+    .option-label input[type="radio"],
+    .option-label input[type="checkbox"] {
+      margin-top: 4px;
+      width: 22px;
+      height: 22px;
+      accent-color: #059669;
+      cursor: pointer;
+    }
+
+    .option-label.selected {
+      background: #ecfdf5;
+      border-color: #10b981;
+      font-weight: 700;
+    }
+
+    /* INPUT NUMBER OR MONEY */
+    .input-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+
+    .input-prefix {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: #059669;
+    }
+
+    .alice-input {
+      font-family: 'Fredoka', 'Nunito', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      padding: 10px 18px;
+      border: 2px solid #94a3b8;
+      border-radius: var(--radius-sm);
+      width: 160px;
+      color: #0f172a;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .alice-input:focus {
+      border-color: #059669;
+      box-shadow: 0 0 0 4px rgba(5, 150, 105, 0.15);
+    }
+
+    .input-unit {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #64748b;
+    }
+
+    /* ACTION BUTTONS */
+    .q-actions {
+      margin-top: 18px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-check {
+      background: #059669;
+      color: white;
+      border: none;
+      padding: 12px 26px;
+      font-size: 1.15rem;
+      font-weight: 800;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 4px 10px rgba(5, 150, 105, 0.25);
+    }
+
+    .btn-check:hover {
+      background: #047857;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 14px rgba(5, 150, 105, 0.35);
+    }
+
+    .btn-retry {
+      background: #f59e0b;
+      color: white;
+      border: none;
+      padding: 10px 22px;
+      font-size: 1rem;
+      font-weight: 700;
+      border-radius: 999px;
+      cursor: pointer;
+      display: none;
+    }
+
+    .btn-retry:hover {
+      background: #d97706;
+    }
+
+    /* TWO-LAYER FEEDBACK & EXPLANATION BOX */
+    .feedback-box {
+      margin-top: 18px;
+      padding: 18px 22px;
+      border-radius: var(--radius-sm);
+      display: none;
+      font-size: 1.1rem;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .feedback-box.correct {
+      background: #ecfdf5;
+      border: 2px solid #34d399;
+      color: #065f46;
+    }
+
+    .feedback-box.incorrect {
+      background: #fffbeb;
+      border: 2px solid #fcd34d;
+      color: #92400e;
+    }
+
+    .feedback-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      font-size: 1.25rem;
+      margin-bottom: 8px;
+    }
+
+    .explanation-body {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px dashed rgba(0,0,0,0.15);
+      color: #1e293b;
+      line-height: 1.7;
+    }
+
+    /* TRAP ALERT BOX */
+    .trap-box {
+      background: #fff7ed;
+      border: 2px solid #fb923c;
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      margin: 12px 0;
+      color: #7c2d12;
+    }
+
+    .trap-box h4 {
+      color: #c2410c;
+      font-size: 1.15rem;
+      margin-bottom: 8px;
+    }
+
+    .trap-alert {
+      background: #ffedd5;
+      color: #9a3412;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-weight: 800;
+    }
+
+    /* MATH BOX FOR CDU CALCULATION */
+    .math-box {
+      font-family: 'Fira Code', monospace;
+      background: #0f172a;
+      color: #38bdf8;
+      padding: 14px 20px;
+      border-radius: var(--radius-sm);
+      margin: 10px 0;
+      font-size: 1.15rem;
+      line-height: 1.4;
+      display: inline-block;
+    }
+
+    /* CADERNO BADGE */
+    .caderno-badge {
+      margin-top: 18px;
+      padding: 12px 18px;
+      background: #f0fdf4;
+      border: 2px dashed #86efac;
+      border-radius: var(--radius-sm);
+      font-size: 1rem;
+      color: #166534;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* CHART IN P78 */
+    .chart-container {
+      background: white;
+      border: 2px solid #cbd5e1;
+      border-radius: var(--radius-sm);
+      padding: 18px;
+      margin: 14px 0;
+    }
+
+    .bar-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .bar-label {
+      width: 70px;
+      font-weight: 700;
+      font-size: 1.05rem;
+      text-align: right;
+    }
+
+    .bar-track {
+      flex-grow: 1;
+      background: #f1f5f9;
+      height: 32px;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      color: white;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      padding-left: 12px;
+      font-size: 0.95rem;
+    }
+
+    /* PERMANENT REFERENCE MODAL / DRAWER */
+    .ref-modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(4px);
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .ref-drawer {
+      background: white;
+      width: 100%;
+      max-width: 900px;
+      max-height: 90vh;
+      border-radius: var(--radius);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      border: 3px solid #0284c7;
+    }
+
+    .ref-drawer-header {
+      background: #0284c7;
+      color: white;
+      padding: 18px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .ref-drawer-header h2 {
+      color: white;
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-close-drawer {
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      color: white;
+      font-size: 1.5rem;
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+
+    .btn-close-drawer:hover {
+      background: rgba(255, 255, 255, 0.35);
+    }
+
+    .ref-drawer-content {
+      padding: 24px;
+      overflow-y: auto;
+      flex-grow: 1;
+      font-size: 1.1rem;
+    }
+
+    .ref-section {
+      margin-bottom: 28px;
+    }
+
+    .ref-section h3 {
+      font-size: 1.3rem;
+      color: #0369a1;
+      margin-bottom: 12px;
+      padding-bottom: 6px;
+      border-bottom: 2px solid #e0f2fe;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* COINS AND BILLS IN REFERENCE GUIDE */
+    .coins-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin: 12px 0;
+    }
+
+    .coin-badge {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 85px;
+      height: 85px;
+      border-radius: 50%;
+      font-weight: 800;
+      font-size: 1rem;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      border: 3px solid rgba(0,0,0,0.1);
+      text-align: center;
+      line-height: 1.1;
+    }
+
+    .coin-1c { background: #d97706; color: white; }
+    .coin-5c { background: #b45309; color: white; }
+    .coin-10c { background: #eab308; color: #713f12; }
+    .coin-25c { background: #ca8a04; color: white; }
+    .coin-50c { background: #94a3b8; color: #0f172a; border-color: #64748b; }
+    .coin-1r {
+      background: radial-gradient(circle, #e2e8f0 55%, #f59e0b 60%);
+      color: #0f172a;
+      border: 3px solid #d97706;
+      width: 95px;
+      height: 95px;
+    }
+
+    .bills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 12px;
+      margin: 14px 0;
+    }
+
+    .bill-card {
+      border-radius: 8px;
+      padding: 12px 10px;
+      color: white;
+      font-weight: 800;
+      text-align: center;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .bill-val { font-size: 1.3rem; margin-bottom: 4px; }
+    .bill-animal { font-size: 0.8rem; font-weight: 600; opacity: 0.95; }
+
+    .bill-2 { background: #1e3a8a; } /* Tartaruga */
+    .bill-5 { background: #7c2d12; } /* Garça */
+    .bill-10 { background: #b91c1c; } /* Arara */
+    .bill-20 { background: #d97706; } /* Mico-leão */
+    .bill-50 { background: #c2410c; } /* Onça-pintada */
+    .bill-100 { background: #0284c7; } /* Garoupa */
+    .bill-200 { background: #475569; } /* Lobo-guará */
+
+    /* GOLDEN FORMULAS */
+    .formula-card {
+      background: #f0fdf4;
+      border: 2px solid #86efac;
+      border-radius: var(--radius-sm);
+      padding: 16px 20px;
+      margin-bottom: 12px;
+    }
+
+    .formula-title {
+      font-weight: 800;
+      color: #166534;
+      font-size: 1.15rem;
+      margin-bottom: 4px;
+    }
+
+    .formula-code {
+      font-family: 'Fira Code', monospace;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #0f172a;
+      background: white;
+      padding: 6px 14px;
+      border-radius: 8px;
+      display: inline-block;
+      border: 1px solid #bbf7d0;
+      margin-top: 4px;
+    }
+
+    /* CERTIFICATE MODAL */
+    .certificate-card {
+      background: #fffbeb;
+      border: 8px double #d97706;
+      border-radius: var(--radius);
+      padding: 40px;
+      text-align: center;
+      box-shadow: var(--shadow-lg);
+      margin: 30px 0;
+    }
+
+    .certificate-card h2 {
+      color: #b45309;
+      font-size: 2.2rem;
+      margin-bottom: 14px;
+    }
+
+    .btn-print {
+      background: #d97706;
+      color: white;
+      border: none;
+      padding: 12px 28px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      border-radius: 999px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+
+    /* TOAST NOTIFICATION */
+    #toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #0f172a;
+      color: white;
+      padding: 14px 24px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 1.05rem;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+      display: none;
+      z-index: 300;
+      animation: slideUp 0.3s ease;
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(40px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      body { font-size: 16px; }
+      .top-header { padding: 10px 16px; }
+      .brand-title { font-size: 1.15rem; }
+      .three-canvas-container { height: 280px; }
+      .question-card { padding: 20px; }
+    }
+  
+    /* =========================================================================
+       MERCADINHO DA ALICE & MODO LÚDICO STYLES
+       ========================================================================= */
+
+    /* Mode Tabs in Header */
+    .mode-tabs-header {
+      display: flex;
+      align-items: center;
+      background: #e2e8f0;
+      padding: 4px;
+      border-radius: 999px;
+      gap: 4px;
+    }
+
+    .btn-mode-tab {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: transparent;
+      border: none;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #475569;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .btn-mode-tab:hover {
+      color: #0f172a;
+    }
+
+    .btn-mode-tab.active {
+      background: #059669;
+      color: white;
+      box-shadow: 0 2px 8px rgba(5, 150, 105, 0.35);
+    }
+
+    .mode-badge {
+      background: #f59e0b;
+      color: #78350f;
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 2px 6px;
+      border-radius: 999px;
+      text-transform: uppercase;
+    }
+
+    .gold-coins-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: #fef3c7;
+      border: 2px solid #f59e0b;
+      color: #92400e;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: 1.05rem;
+      box-shadow: 0 2px 6px rgba(245, 158, 11, 0.2);
+      transition: transform 0.2s ease;
+    }
+
+    .gold-coins-badge.bounce {
+      transform: scale(1.2);
+    }
+
+    .btn-sound-toggle {
+      background: white;
+      border: 2px solid var(--border);
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-sound-toggle:hover {
+      background: #f1f5f9;
+      transform: scale(1.05);
+    }
+
+    /* Quick Play Hero Banner */
+    .quick-play-banner {
+      background: linear-gradient(135deg, #fef9c3 0%, #fef08a 35%, #ecfdf5 100%);
+      border: 3px dashed #10b981;
+      border-radius: var(--radius);
+      padding: 22px 26px;
+      margin-bottom: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      cursor: pointer;
+      box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.15);
+      transition: all 0.25s ease;
+    }
+
+    .quick-play-banner:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 16px 30px -5px rgba(16, 185, 129, 0.25);
+      border-color: #059669;
+    }
+
+    .quick-play-icon {
+      font-size: 3.2rem;
+      animation: coin-wiggle 2.5s infinite ease-in-out;
+      flex-shrink: 0;
+    }
+
+    .quick-play-content {
+      flex: 1;
+    }
+
+    .quick-play-badge {
+      display: inline-block;
+      background: #10b981;
+      color: white;
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 800;
+      margin-bottom: 6px;
+      box-shadow: 0 2px 6px rgba(16, 185, 129, 0.3);
+    }
+
+    .quick-play-content h3 {
+      font-size: 1.5rem;
+      color: #065f46;
+      margin-bottom: 4px;
+    }
+
+    .quick-play-content p {
+      color: #334155;
+      font-size: 1.05rem;
+      margin: 0;
+    }
+
+    .btn-play-quick {
+      background: #059669;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 999px;
+      font-size: 1.1rem;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(5, 150, 105, 0.35);
+      transition: all 0.2s ease;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .quick-play-banner:hover .btn-play-quick {
+      background: #047857;
+      transform: scale(1.05);
+    }
+
+    /* =========================================================================
+       MARKET VIEW CONTAINER
+       ========================================================================= */
+    #market-view {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .market-header {
+      background: white;
+      border-radius: var(--radius);
+      padding: 18px 24px;
+      border: 2px solid var(--border);
+      box-shadow: var(--shadow);
+      margin-bottom: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .market-round-tracker {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #f8fafc;
+      padding: 6px 16px;
+      border-radius: 999px;
+      border: 1.5px solid var(--border);
+    }
+
+    .round-label {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #64748b;
+    }
+
+    .round-dots {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .round-dot {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: #e2e8f0;
+      color: #64748b;
+      font-size: 0.85rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+
+    .round-dot.current {
+      background: #f59e0b;
+      color: white;
+      transform: scale(1.15);
+      box-shadow: 0 2px 8px rgba(245, 158, 11, 0.4);
+    }
+
+    .round-dot.done {
+      background: #10b981;
+      color: white;
+    }
+
+    .market-tabs {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .market-tab {
+      background: #f1f5f9;
+      border: 2px solid var(--border);
+      color: #475569;
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .market-tab:hover {
+      background: #e2e8f0;
+    }
+
+    .market-tab.active {
+      background: #2563eb;
+      border-color: #2563eb;
+      color: white;
+      box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25);
+    }
+
+    /* CUSTOMER CARD */
+    .customer-card {
+      background: white;
+      border-radius: var(--radius);
+      padding: 24px;
+      border: 2px solid #cbd5e1;
+      box-shadow: var(--shadow);
+      margin-bottom: 22px;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      position: relative;
+    }
+
+    .customer-avatar-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .customer-avatar {
+      font-size: 4.2rem;
+      background: #ecfdf5;
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 3px solid #10b981;
+      box-shadow: 0 6px 15px rgba(16, 185, 129, 0.2);
+      animation: floatCustomer 3s ease-in-out infinite;
+    }
+
+    @keyframes floatCustomer {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-8px); }
+    }
+
+    .customer-name-tag {
+      font-size: 0.9rem;
+      font-weight: 800;
+      color: #065f46;
+      background: #d1fae5;
+      padding: 2px 10px;
+      border-radius: 999px;
+    }
+
+    .customer-bubble {
+      flex: 1;
+      background: #f8fafc;
+      border: 2px solid #e2e8f0;
+      border-radius: 18px;
+      padding: 18px 22px;
+      position: relative;
+    }
+
+    .customer-bubble::before {
+      content: "";
+      position: absolute;
+      left: -12px;
+      top: 36px;
+      width: 0;
+      height: 0;
+      border-top: 10px solid transparent;
+      border-bottom: 10px solid transparent;
+      border-right: 12px solid #cbd5e1;
+    }
+
+    .customer-bubble::after {
+      content: "";
+      position: absolute;
+      left: -9px;
+      top: 37px;
+      width: 0;
+      height: 0;
+      border-top: 9px solid transparent;
+      border-bottom: 9px solid transparent;
+      border-right: 10px solid #f8fafc;
+    }
+
+    .customer-text {
+      font-size: 1.25rem;
+      color: #1e293b;
+      line-height: 1.5;
+      margin-bottom: 12px;
+    }
+
+    .order-tags-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .order-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    .order-pill.price {
+      background: #fee2e2;
+      color: #b91c1c;
+      border: 1.5px solid #fca5a5;
+    }
+
+    .order-pill.paid {
+      background: #dbeafe;
+      color: #1e40af;
+      border: 1.5px solid #93c5fd;
+    }
+
+    .order-pill.target {
+      background: #fef3c7;
+      color: #92400e;
+      border: 1.5px solid #fcd34d;
+    }
+
+    /* INTERACTIVE TRAY */
+    .tray-container {
+      background: #fffbeb;
+      border: 2.5px dashed #f59e0b;
+      border-radius: var(--radius);
+      padding: 22px;
+      margin-bottom: 22px;
+      box-shadow: var(--shadow);
+    }
+
+    .tray-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .tray-title {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: #92400e;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .tray-total {
+      font-size: 1.35rem;
+      font-weight: 900;
+      color: #047857;
+      background: #ecfdf5;
+      padding: 4px 16px;
+      border-radius: 999px;
+      border: 1.5px solid #a7f3d0;
+    }
+
+    .btn-clear-tray {
+      background: #fee2e2;
+      color: #b91c1c;
+      border: 1.5px solid #fca5a5;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-clear-tray:hover {
+      background: #fecaca;
+    }
+
+    .tray-items {
+      min-height: 80px;
+      background: rgba(255, 255, 255, 0.85);
+      border-radius: 14px;
+      padding: 14px;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 16px;
+      border: 1.5px solid #fde68a;
+    }
+
+    .tray-placeholder {
+      color: #94a3b8;
+      font-style: italic;
+      font-size: 1rem;
+      width: 100%;
+      text-align: center;
+    }
+
+    /* Placed Money Chips in Tray */
+    .tray-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: transform 0.15s ease;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      user-select: none;
+    }
+
+    .tray-chip:hover {
+      transform: scale(1.08) translateY(-2px);
+    }
+
+    .tray-chip.bill {
+      background: #ecfdf5;
+      border: 2px solid #059669;
+      color: #065f46;
+    }
+
+    .tray-chip.coin {
+      background: #fef3c7;
+      border: 2px solid #d97706;
+      color: #92400e;
+    }
+
+    .tray-chip .chip-remove {
+      color: #ef4444;
+      font-size: 0.9rem;
+      margin-left: 2px;
+    }
+
+    .tray-actions {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .btn-submit-action {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: white;
+      border: none;
+      padding: 14px 34px;
+      border-radius: 999px;
+      font-size: 1.25rem;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(5, 150, 105, 0.35);
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-submit-action:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(5, 150, 105, 0.45);
+    }
+
+    .btn-submit-action:active {
+      transform: translateY(1px);
+    }
+
+    /* Feedback Box */
+    .market-feedback {
+      margin-top: 14px;
+      padding: 14px 18px;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      text-align: center;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .market-feedback.success {
+      background: #d1fae5;
+      color: #065f46;
+      border: 2px solid #34d399;
+    }
+
+    .market-feedback.retry {
+      background: #fee2e2;
+      color: #991b1b;
+      border: 2px solid #f87171;
+    }
+
+    /* =========================================================================
+       CASH REGISTER (GAVETA DO CAIXA TÁTIL)
+       ========================================================================= */
+    .cash-register-container {
+      background: #0f172a;
+      border-radius: var(--radius);
+      padding: 24px;
+      color: white;
+      box-shadow: 0 15px 35px rgba(15, 23, 42, 0.25);
+      border: 2px solid #334155;
+    }
+
+    .register-header {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #f1f5f9;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .cash-group-title {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 10px;
+      margin-top: 10px;
+    }
+
+    /* Banknotes Grid */
+    .cash-bills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .cash-btn {
+      cursor: pointer;
+      border: none;
+      border-radius: 12px;
+      padding: 10px 8px;
+      font-family: inherit;
+      transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+      user-select: none;
+      touch-action: manipulation;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .cash-btn:hover {
+      transform: translateY(-3px) scale(1.04);
+      filter: brightness(1.1);
+    }
+
+    .cash-btn:active {
+      transform: scale(0.96);
+    }
+
+    .bill-btn {
+      height: 72px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .bill-val {
+      font-size: 1.25rem;
+      font-weight: 900;
+      color: white;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+    }
+
+    .bill-animal {
+      font-size: 0.8rem;
+      color: rgba(255, 255, 255, 0.9);
+      font-weight: 700;
+      margin-top: 2px;
+    }
+
+    /* Color accuracy for Real notes */
+    .bill-100 { background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); }
+    .bill-50  { background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%); }
+    .bill-20  { background: linear-gradient(135deg, #eab308 0%, #ca8a04 100%); }
+    .bill-10  { background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%); }
+    .bill-5   { background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%); }
+    .bill-2   { background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%); }
+
+    /* Coins Grid */
+    .cash-coins-grid {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      gap: 14px;
+      padding: 8px 0;
+    }
+
+    .coin-btn {
+      border-radius: 50%;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+      position: relative;
+    }
+
+    .coin-100 {
+      width: 68px;
+      height: 68px;
+      background: radial-gradient(circle, #f1f5f9 45%, #eab308 50%, #ca8a04 100%);
+      color: #1e293b;
+      font-size: 1.05rem;
+      border: 3px solid #facc15;
+    }
+
+    .coin-50 {
+      width: 62px;
+      height: 62px;
+      background: radial-gradient(circle, #ffffff 50%, #94a3b8 100%);
+      color: #0f172a;
+      font-size: 0.95rem;
+      border: 3px solid #cbd5e1;
+    }
+
+    .coin-25 {
+      width: 58px;
+      height: 58px;
+      background: radial-gradient(circle, #fde68a 50%, #d97706 100%);
+      color: #78350f;
+      font-size: 0.9rem;
+      border: 3px solid #f59e0b;
+    }
+
+    .coin-10 {
+      width: 52px;
+      height: 52px;
+      background: radial-gradient(circle, #fef08a 50%, #ca8a04 100%);
+      color: #713f12;
+      font-size: 0.85rem;
+      border: 3px solid #eab308;
+    }
+
+    .coin-05 {
+      width: 48px;
+      height: 48px;
+      background: radial-gradient(circle, #fca5a5 50%, #b91c1c 100%);
+      color: #450a0a;
+      font-size: 0.85rem;
+      border: 3px solid #ef4444;
+    }
+
+    /* =========================================================================
+       SUBGAME 3: BATALHA DOS COFRINHOS
+       ========================================================================= */
+    .piggy-battle-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+
+    .piggy-card {
+      background: white;
+      border: 3px solid #e2e8f0;
+      border-radius: var(--radius);
+      padding: 24px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: var(--shadow);
+      position: relative;
+    }
+
+    .piggy-card:hover {
+      transform: translateY(-5px) scale(1.02);
+      border-color: #3b82f6;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .piggy-card.selected-correct {
+      border-color: #10b981;
+      background: #ecfdf5;
+    }
+
+    .piggy-card.selected-wrong {
+      border-color: #ef4444;
+      background: #fef2f2;
+    }
+
+    .piggy-icon {
+      font-size: 4rem;
+      margin-bottom: 10px;
+    }
+
+    .piggy-title {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: #1e293b;
+      margin-bottom: 12px;
+    }
+
+    .piggy-items-list {
+      background: #f8fafc;
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 14px;
+      font-size: 1rem;
+      color: #334155;
+      text-align: left;
+      line-height: 1.6;
+    }
+
+    .piggy-revealed-total {
+      font-size: 1.6rem;
+      font-weight: 900;
+      color: #059669;
+      display: none;
+      margin-top: 10px;
+      animation: popIn 0.3s ease;
+    }
+
+    @keyframes popIn {
+      0% { transform: scale(0.6); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    /* =========================================================================
+       ROUND CELEBRATION MODAL
+       ========================================================================= */
+    .round-win-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(15, 23, 42, 0.7);
+      backdrop-filter: blur(8px);
+      z-index: 400;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .round-win-modal {
+      background: white;
+      border-radius: 28px;
+      padding: 36px 28px;
+      max-width: 500px;
+      width: 100%;
+      text-align: center;
+      border: 3px solid #10b981;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+      animation: popIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .win-trophy-icon {
+      font-size: 4.5rem;
+      margin-bottom: 12px;
+      animation: coin-wiggle 2s infinite ease-in-out;
+    }
+
+    .round-win-modal h2 {
+      font-size: 2rem;
+      color: #065f46;
+      margin-bottom: 8px;
+    }
+
+    .round-win-modal p {
+      color: #475569;
+      font-size: 1.15rem;
+      margin-bottom: 22px;
+    }
+
+    .win-reward-box {
+      background: #fef3c7;
+      border: 2px solid #f59e0b;
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: #92400e;
+    }
+
+    .win-modal-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .btn-win-replay {
+      background: #059669;
+      color: white;
+      border: none;
+      padding: 14px 24px;
+      border-radius: 999px;
+      font-size: 1.15rem;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(5, 150, 105, 0.35);
+      transition: all 0.2s;
+    }
+
+    .btn-win-replay:hover {
+      background: #047857;
+      transform: scale(1.02);
+    }
+
+    .btn-win-map {
+      background: #f1f5f9;
+      color: #475569;
+      border: 1.5px solid var(--border);
+      padding: 12px 20px;
+      border-radius: 999px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-win-map:hover {
+      background: #e2e8f0;
+      color: #0f172a;
+    }
+
+    /* Confetti Canvas */
+    #confetti-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 500;
+    }
+
+    
+    /* =========================================================================
+       SUBGAME 4: QUIZ DE CONCEITOS (3 OPÇÕES)
+       ========================================================================= */
+    .quiz-theme-badge {
+      display: inline-block;
+      background: #ede9fe;
+      color: #6d28d9;
+      font-size: 0.85rem;
+      font-weight: 800;
+      padding: 4px 14px;
+      border-radius: 999px;
+      margin-bottom: 10px;
+      border: 1.5px solid #ddd6fe;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .quiz-options-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+
+    .quiz-opt-btn {
+      background: white;
+      border: 2.5px solid #cbd5e1;
+      border-radius: 18px;
+      padding: 16px 22px;
+      font-family: inherit;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #1e293b;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      text-align: left;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 4px 8px -2px rgba(0,0,0,0.06);
+      user-select: none;
+      touch-action: manipulation;
+      min-height: 64px;
+    }
+
+    .quiz-opt-btn:hover {
+      background: #f8fafc;
+      border-color: #3b82f6;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 18px -4px rgba(59, 130, 246, 0.2);
+    }
+
+    .quiz-opt-btn:active {
+      transform: scale(0.98);
+    }
+
+    .quiz-opt-letter {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: #f1f5f9;
+      color: #475569;
+      font-weight: 900;
+      font-size: 1.15rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      border: 2px solid #cbd5e1;
+      transition: all 0.2s;
+    }
+
+    .quiz-opt-btn:hover .quiz-opt-letter {
+      background: #dbeafe;
+      color: #1d4ed8;
+      border-color: #93c5fd;
+    }
+
+    .quiz-opt-text {
+      flex: 1;
+      line-height: 1.45;
+    }
+
+    .quiz-opt-btn.correct {
+      background: #ecfdf5 !important;
+      border-color: #10b981 !important;
+      color: #065f46 !important;
+      box-shadow: 0 6px 18px rgba(16, 185, 129, 0.3) !important;
+    }
+
+    .quiz-opt-btn.correct .quiz-opt-letter {
+      background: #10b981 !important;
+      color: white !important;
+      border-color: #059669 !important;
+    }
+
+    .quiz-opt-btn.wrong {
+      background: #fef2f2 !important;
+      border-color: #ef4444 !important;
+      color: #991b1b !important;
+      opacity: 0.85;
+    }
+
+    .quiz-opt-btn.wrong .quiz-opt-letter {
+      background: #ef4444 !important;
+      color: white !important;
+      border-color: #dc2626 !important;
+    }
+
+    /* RESPONSIVENESS FOR MOBILE WAITING ROOMS */
+    @media (max-width: 768px) {
+      .mode-tabs-header {
+        order: 3;
+        width: 100%;
+        justify-content: center;
+      }
+      .quick-play-banner {
+        flex-direction: column;
+        text-align: center;
+        padding: 18px;
+      }
+      .quick-play-icon { font-size: 2.5rem; }
+      .customer-card {
+        flex-direction: column;
+        text-align: center;
+        padding: 18px;
+      }
+      .customer-bubble::before, .customer-bubble::after { display: none; }
+      .order-tags-row { justify-content: center; }
+      .piggy-battle-container { grid-template-columns: 1fr; }
+      .cash-bills-grid { grid-template-columns: repeat(3, 1fr); }
+      .bill-btn { height: 62px; }
+      .bill-val { font-size: 1.1rem; }
+      .bill-animal { display: none; }
+      .coin-100 { width: 56px; height: 56px; font-size: 0.9rem; }
+      .coin-50  { width: 50px; height: 50px; font-size: 0.85rem; }
+      .coin-25  { width: 46px; height: 46px; font-size: 0.8rem; }
+      .coin-10  { width: 42px; height: 42px; font-size: 0.75rem; }
+      .coin-05  { width: 38px; height: 38px; font-size: 0.7rem; }
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- TOP HEADER -->
+  <header class="top-header">
+    <div class="brand-title" onclick="goHome()">
+      <span class="brand-icon">🌟</span>
+      <span>Aventuras Monetárias da Alice</span>
+    </div>
+
+    <!-- HIBRIDO: MUDANÇA DE MODO -->
+    <nav class="mode-tabs-header">
+      <button id="btn-mode-islands" class="btn-mode-tab active" onclick="goHome()">
+        <span>🏝️</span> <span class="mode-text">Ilhas do Livro</span>
+      </button>
+      <button id="btn-mode-market" class="btn-mode-tab" onclick="openMarketView()">
+        <span>🛒</span> <span class="mode-text">Mercadinho Rápido</span> <span class="mode-badge">Novo!</span>
+      </button>
+    </nav>
+
+    <div class="header-actions">
+      <div class="gold-coins-badge" id="gold-coins-container" title="Moedas de Ouro do Cofrinho da Alice">
+        <span>🪙</span>
+        <span id="gold-coins-count">0</span>
+      </div>
+      <div class="stars-badge" title="Estrelas do Livro Escolar">
+        <span>⭐</span>
+        <span id="stars-count">0</span>
+        <span style="font-size: 0.85rem; opacity: 0.8;">/ 67</span>
+      </div>
+      <button class="btn-sound-toggle" id="btn-sound-toggle" onclick="toggleSound()" title="Ativar ou Desativar Efeitos Sonoros">
+        🔊
+      </button>
+      <button class="btn-ref-guide" onclick="openRefModal()">
+        <span>📖</span>
+        <span>Guia</span>
+      </button>
+      <button class="btn-reset" onclick="confirmReset()" title="Reiniciar Progresso">
+        🔄
+      </button>
+    </div>
+  </header>
+
+  <main class="app-container">
+
+    <!-- ==================== MENU VIEW ==================== -->
+    <section id="menu-view">
+      <div class="hero-banner">
+        <h1>Bem-vinda, Alice! 🎒</h1>
+        <p>Explore o mapa das 5 Ilhas Monetárias do Capítulo 9 ou jogue uma partida rápida no Mercadinho enquanto espera!</p>
+      </div>
+
+      <!-- BANNER DE ENTRADA RÁPIDA NO MERCADINHO (PERFEITO PARA ESPERAR O PAI) -->
+      <div class="quick-play-banner" onclick="openMarketView()">
+        <div class="quick-play-icon">🍦</div>
+        <div class="quick-play-content">
+          <div class="quick-play-badge">⏱️ Passatempo Rápido de 2 minutos • Sem pressão</div>
+          <h3>🛒 Mercadinho da Alice — Caixa Registradora!</h3>
+          <p>Atenda clientes fofos, dê o troco certo nas notas e moedas e encha seu cofrinho de moedas de ouro!</p>
+        </div>
+        <button class="btn-play-quick">Jogar Agora ➔</button>
+      </div>
+
+      <!-- THREE.JS 3D CANVAS -->
+      <div class="three-canvas-container">
+        <canvas id="three-canvas"></canvas>
+        <div class="three-instruction">
+          <span>🏝️</span> Clique em uma ilha flutuante no mapa 3D ou escolha um card abaixo:
+        </div>
+      </div>
+
+      <!-- 2D CARDS GRID -->
+      <div class="islands-grid" id="islands-cards-container">
+        <!-- Rendered by JS -->
+      </div>
+    </section>
+
+    <!-- ==================== STUDY VIEW ==================== -->
+    <section id="study-view">
+      <div class="study-top-nav">
+        <button class="btn-back-menu" onclick="goHome()">
+          <span>←</span>
+          <span>Voltar ao Mapa das Ilhas</span>
+        </button>
+        <div id="mission-progress-label" style="font-weight: 800; color: #059669;"></div>
+      </div>
+
+      <div class="mission-header-card" id="mission-header">
+        <span class="mission-tag" id="m-pages"></span>
+        <h2 id="m-title"></h2>
+        <p id="m-desc"></p>
+        <div class="mission-progress-bar-container">
+          <div class="mission-progress-bar" id="m-progress-bar"></div>
+        </div>
+      </div>
+
+      <!-- QUESTIONS CONTAINER -->
+      <div id="questions-container">
+        <!-- Rendered by JS -->
+      </div>
+
+      <!-- NEXT MISSION OR FINISH BANNER -->
+      <div id="mission-finish-card" style="display:none; text-align:center; background:white; border-radius:var(--radius); padding:32px; border:2px solid #10b981; box-shadow:var(--shadow);">
+        <h3 style="font-size:1.8rem; color:#059669; margin-bottom:8px;">🎉 Ilha Concluída com Sucesso!</h3>
+        <p style="font-size:1.15rem; color:#475569; margin-bottom:20px;">Você dominou todos os desafios desta ilha! Continue para a próxima jornada.</p>
+        <button class="btn-check" onclick="goHome()" style="background:#0f172a; margin-right:12px;">Voltar ao Mapa</button>
+        <button class="btn-check" id="btn-next-mission" onclick="nextMission()">Ir para a Próxima Ilha ➔</button>
+      </div>
+    </section>
+
+  
+    <!-- ==================== MERCADINHO DA ALICE VIEW ==================== -->
+    <section id="market-view">
+      
+      <!-- TOP NAV & TABS -->
+      <div class="market-header">
+        <button class="btn-back-menu" onclick="goHome()">
+          <span>←</span>
+          <span>Voltar ao Mapa das Ilhas</span>
+        </button>
+
+        <div class="market-round-tracker">
+          <span class="round-label">Cliente da Rodada:</span>
+          <div class="round-dots">
+            <span class="round-dot current" id="rd-1">1</span>
+            <span class="round-dot" id="rd-2">2</span>
+            <span class="round-dot" id="rd-3">3</span>
+          </div>
+        </div>
+
+        <div class="market-tabs">
+          <button class="market-tab active" id="tab-troco" onclick="switchMarketGame('troco')">
+            💵 1. Dar o Troco
+          </button>
+          <button class="market-tab" id="tab-exato" onclick="switchMarketGame('exato')">
+            🧁 2. Pagar Valor Exato
+          </button>
+          <button class="market-tab" id="tab-cofrinho" onclick="switchMarketGame('cofrinho')">
+            🐷 3. Qual Tem Mais?
+          </button>
+          <button class="market-tab" id="tab-quiz" onclick="switchMarketGame('quiz')">
+            🧠 4. Quiz de Conceitos (3 Opções)
+          </button>
+        </div>
+      </div>
+
+      <!-- ================= SUBGAME 1: DAR O TROCO ================= -->
+      <div id="subgame-troco" class="subgame-panel">
+        <!-- Customer Dialogue -->
+        <div class="customer-card">
+          <div class="customer-avatar-box">
+            <div class="customer-avatar" id="c-avatar">🐻</div>
+            <div class="customer-name-tag" id="c-name">Ursinho Pipoca</div>
+          </div>
+          <div class="customer-bubble">
+            <div class="customer-text" id="c-dialogue">
+              "Olá, Alice! Quero levar este <strong>Sorvete de Morango 🍦 (R$ 3,50)</strong>.<br>
+              Paguei com esta cédula de <strong>R$ 5,00</strong> 💵. Quanto devo receber de troco?"
+            </div>
+            <div class="order-tags-row">
+              <span class="order-pill price">Preço: <strong id="c-price-tag">R$ 3,50</strong></span>
+              <span class="order-pill paid">Pago: <strong id="c-paid-tag">R$ 5,00</strong></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tray -->
+        <div class="tray-container">
+          <div class="tray-header">
+            <div class="tray-title">
+              <span>🛎️</span> Bandeja de Troco da Alice:
+            </div>
+            <div class="tray-total">
+              Total na bandeja: <span id="tray-total-display">R$ 0,00</span>
+            </div>
+            <button class="btn-clear-tray" onclick="clearTray()">🗑️ Limpar</button>
+          </div>
+          <div class="tray-items" id="tray-items-container">
+            <span class="tray-placeholder">Toque nas notas e moedas da gaveta abaixo para montar o troco!</span>
+          </div>
+          <div class="tray-actions">
+            <button class="btn-submit-action" onclick="submitChange()">
+              <span>🔔</span> Entregar Troco ao Cliente!
+            </button>
+          </div>
+          <div id="troco-feedback" class="market-feedback" style="display:none;"></div>
+        </div>
+
+        <!-- Cash Register Drawer -->
+        <div class="cash-register-container">
+          <div class="register-header">
+            <span>🏧</span> <strong>Gaveta do Caixa</strong> — Toque para colocar na bandeja:
+          </div>
+
+          <div class="cash-group-title">Cédulas do Real:</div>
+          <div class="cash-bills-grid">
+            <button class="cash-btn bill-btn bill-100" onclick="addMoneyToTray(100, 'bill', 'R$ 100')">
+              <span class="bill-val">R$ 100</span>
+              <span class="bill-animal">🐟 Garoupa</span>
+            </button>
+            <button class="cash-btn bill-btn bill-50" onclick="addMoneyToTray(50, 'bill', 'R$ 50')">
+              <span class="bill-val">R$ 50</span>
+              <span class="bill-animal">🐆 Onça</span>
+            </button>
+            <button class="cash-btn bill-btn bill-20" onclick="addMoneyToTray(20, 'bill', 'R$ 20')">
+              <span class="bill-val">R$ 20</span>
+              <span class="bill-animal">🐒 Mico</span>
+            </button>
+            <button class="cash-btn bill-btn bill-10" onclick="addMoneyToTray(10, 'bill', 'R$ 10')">
+              <span class="bill-val">R$ 10</span>
+              <span class="bill-animal">🦜 Arara</span>
+            </button>
+            <button class="cash-btn bill-btn bill-5" onclick="addMoneyToTray(5, 'bill', 'R$ 5')">
+              <span class="bill-val">R$ 5</span>
+              <span class="bill-animal">🦩 Garça</span>
+            </button>
+            <button class="cash-btn bill-btn bill-2" onclick="addMoneyToTray(2, 'bill', 'R$ 2')">
+              <span class="bill-val">R$ 2</span>
+              <span class="bill-animal">🐢 Tartaruga</span>
+            </button>
+          </div>
+
+          <div class="cash-group-title">Moedas do Real:</div>
+          <div class="cash-coins-grid">
+            <button class="cash-btn coin-btn coin-100" onclick="addMoneyToTray(1.00, 'coin', 'R$ 1,00')">
+              <span>R$ 1</span>
+            </button>
+            <button class="cash-btn coin-btn coin-50" onclick="addMoneyToTray(0.50, 'coin', '50¢')">
+              <span>50¢</span>
+            </button>
+            <button class="cash-btn coin-btn coin-25" onclick="addMoneyToTray(0.25, 'coin', '25¢')">
+              <span>25¢</span>
+            </button>
+            <button class="cash-btn coin-btn coin-10" onclick="addMoneyToTray(0.10, 'coin', '10¢')">
+              <span>10¢</span>
+            </button>
+            <button class="cash-btn coin-btn coin-05" onclick="addMoneyToTray(0.05, 'coin', '5¢')">
+              <span>5¢</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= SUBGAME 2: PAGAR VALOR EXATO ================= -->
+      <div id="subgame-exato" class="subgame-panel" style="display: none;">
+        <div class="customer-card">
+          <div class="customer-avatar-box">
+            <div class="customer-avatar" id="ex-avatar">🐰</div>
+            <div class="customer-name-tag" id="ex-name">Coelhinha Lilica</div>
+          </div>
+          <div class="customer-bubble">
+            <div class="customer-text" id="ex-dialogue">
+              "Quero comprar este <strong>Bolo de Cenoura com Cobertura 🍰</strong>.<br>
+              Coloque exatamente o valor pedido no balcão sem sobrar nem faltar!"
+            </div>
+            <div class="order-tags-row">
+              <span class="order-pill target">Valor Exato a Pagar: <strong id="ex-target-tag">R$ 13,50</strong></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tray for Exact Game -->
+        <div class="tray-container">
+          <div class="tray-header">
+            <div class="tray-title">
+              <span>👛</span> Dinheiro Separado para o Pagamento:
+            </div>
+            <div class="tray-total">
+              Total Separado: <span id="ex-tray-total-display">R$ 0,00</span>
+            </div>
+            <button class="btn-clear-tray" onclick="clearExactTray()">🗑️ Limpar</button>
+          </div>
+          <div class="tray-items" id="ex-tray-items-container">
+            <span class="tray-placeholder">Toque nas notas e moedas da gaveta abaixo para atingir o valor!</span>
+          </div>
+          <div class="tray-actions">
+            <button class="btn-submit-action" onclick="submitExactPayment()">
+              <span>✅</span> Pagar Compra Exata!
+            </button>
+          </div>
+          <div id="exato-feedback" class="market-feedback" style="display:none;"></div>
+        </div>
+
+        <!-- Cash Register Drawer (Exact) -->
+        <div class="cash-register-container">
+          <div class="register-header">
+            <span>🏧</span> <strong>Gaveta de Dinheiro</strong> — Toque para somar ao pagamento:
+          </div>
+
+          <div class="cash-group-title">Cédulas do Real:</div>
+          <div class="cash-bills-grid">
+            <button class="cash-btn bill-btn bill-100" onclick="addMoneyToExactTray(100, 'bill', 'R$ 100')">
+              <span class="bill-val">R$ 100</span>
+            </button>
+            <button class="cash-btn bill-btn bill-50" onclick="addMoneyToExactTray(50, 'bill', 'R$ 50')">
+              <span class="bill-val">R$ 50</span>
+            </button>
+            <button class="cash-btn bill-btn bill-20" onclick="addMoneyToExactTray(20, 'bill', 'R$ 20')">
+              <span class="bill-val">R$ 20</span>
+            </button>
+            <button class="cash-btn bill-btn bill-10" onclick="addMoneyToExactTray(10, 'bill', 'R$ 10')">
+              <span class="bill-val">R$ 10</span>
+            </button>
+            <button class="cash-btn bill-btn bill-5" onclick="addMoneyToExactTray(5, 'bill', 'R$ 5')">
+              <span class="bill-val">R$ 5</span>
+            </button>
+            <button class="cash-btn bill-btn bill-2" onclick="addMoneyToExactTray(2, 'bill', 'R$ 2')">
+              <span class="bill-val">R$ 2</span>
+            </button>
+          </div>
+
+          <div class="cash-group-title">Moedas do Real:</div>
+          <div class="cash-coins-grid">
+            <button class="cash-btn coin-btn coin-100" onclick="addMoneyToExactTray(1.00, 'coin', 'R$ 1,00')">
+              <span>R$ 1</span>
+            </button>
+            <button class="cash-btn coin-btn coin-50" onclick="addMoneyToExactTray(0.50, 'coin', '50¢')">
+              <span>50¢</span>
+            </button>
+            <button class="cash-btn coin-btn coin-25" onclick="addMoneyToExactTray(0.25, 'coin', '25¢')">
+              <span>25¢</span>
+            </button>
+            <button class="cash-btn coin-btn coin-10" onclick="addMoneyToExactTray(0.10, 'coin', '10¢')">
+              <span>10¢</span>
+            </button>
+            <button class="cash-btn coin-btn coin-05" onclick="addMoneyToExactTray(0.05, 'coin', '5¢')">
+              <span>5¢</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= SUBGAME 3: BATALHA DOS COFRINHOS ================= -->
+      <div id="subgame-cofrinho" class="subgame-panel" style="display: none;">
+        <div class="customer-card" style="margin-bottom: 20px;">
+          <div class="customer-avatar-box">
+            <div class="customer-avatar">🐷</div>
+            <div class="customer-name-tag">Duelo de Economias</div>
+          </div>
+          <div class="customer-bubble">
+            <div class="customer-text">
+              "Observe as notas e moedas dentro de cada cofrinho. <strong>Qual dos dois cofrinhos tem a MAIOR quantia de dinheiro?</strong> Toque no cofrinho vencedor!"
+            </div>
+          </div>
+        </div>
+
+        <div class="piggy-battle-container">
+          <!-- Piggy A -->
+          <div class="piggy-card" id="piggy-card-a" onclick="choosePiggy('A')">
+            <div class="piggy-icon">🐷</div>
+            <div class="piggy-title" id="piggy-a-title">Cofrinho Rosa</div>
+            <div class="piggy-items-list" id="piggy-a-list">
+              <!-- JS rendered -->
+            </div>
+            <div class="piggy-revealed-total" id="piggy-a-total">R$ 0,00</div>
+          </div>
+
+          <!-- Piggy B -->
+          <div class="piggy-card" id="piggy-card-b" onclick="choosePiggy('B')">
+            <div class="piggy-icon">🪙</div>
+            <div class="piggy-title" id="piggy-b-title">Cofrinho Dourado</div>
+            <div class="piggy-items-list" id="piggy-b-list">
+              <!-- JS rendered -->
+            </div>
+            <div class="piggy-revealed-total" id="piggy-b-total">R$ 0,00</div>
+          </div>
+        </div>
+
+        <div id="cofrinho-feedback" class="market-feedback" style="display:none;"></div>
+      </div>
+
+      <!-- ================= SUBGAME 4: QUIZ DE CONCEITOS ================= -->
+      <div id="subgame-quiz" class="subgame-panel" style="display: none;">
+        <div class="customer-card">
+          <div class="customer-avatar-box">
+            <div class="customer-avatar" id="qz-avatar">🦉</div>
+            <div class="customer-name-tag" id="qz-character">Corujinha Sabina</div>
+          </div>
+          <div class="customer-bubble">
+            <div class="quiz-theme-badge" id="qz-theme">História do Dinheiro</div>
+            <div class="customer-text" id="qz-question">
+              <!-- JS rendered question -->
+            </div>
+          </div>
+        </div>
+
+        <!-- 3 OPTIONS CONTAINER -->
+        <div class="quiz-options-grid" id="qz-options-container">
+          <!-- JS rendered 3 options -->
+        </div>
+
+        <div id="quiz-feedback" class="market-feedback" style="display:none;"></div>
+      </div>
+
+    </section>
+
+    <!-- CELEBRATION MODAL AO CONCLUIR 3 DESAFIOS -->
+    <div id="round-win-modal" class="round-win-overlay" style="display:none;">
+      <div class="round-win-modal">
+        <div class="win-trophy-icon">🏆</div>
+        <h2>Parabéns, Alice! 🎉</h2>
+        <p>Você completou esta rodada no Mercadinho com maestria e fez cálculos de troco incríveis!</p>
+        <div class="win-reward-box">
+          <span>💰 Recompensa:</span>
+          <strong>+30 Moedas de Ouro</strong>
+        </div>
+        <div class="win-modal-actions">
+          <button class="btn-win-replay" onclick="startNewRound()">
+            🚀 Jogar Outra Rodada (2 min)
+          </button>
+          <button class="btn-win-map" onclick="closeRoundWinModal()">
+            🏝️ Voltar ao Mapa das Ilhas
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ==================== PERMANENT REFERENCE GUIDE MODAL ==================== -->
+  <div class="ref-modal-overlay" id="ref-modal" onclick="closeRefModal(event)">
+    <div class="ref-drawer" onclick="event.stopPropagation()">
+      <div class="ref-drawer-header">
+        <h2><span>📖</span> Folha de Consulta Permanente — Sistema Monetário</h2>
+        <button class="btn-close-drawer" onclick="closeRefModal()">✕</button>
+      </div>
+      <div class="ref-drawer-content">
+
+        <!-- SECTION 1: AS REGRAS DA VÍRGULA -->
+        <div class="ref-section">
+          <h3>📌 1. A Regra de Ouro da Vírgula no Real</h3>
+          <p>O símbolo do nosso dinheiro é <strong>R$</strong>. A vírgula é mágica e separa duas partes:</p>
+          <div style="background:#f1f5f9; padding:16px; border-radius:12px; margin:12px 0; font-size:1.25rem; display:flex; align-items:center; justify-content:center; gap:16px;">
+            <div style="text-align:center;"><strong style="color:#059669; font-size:1.6rem;">85</strong><br><span style="font-size:0.9rem; color:#64748b;">REAIS (inteiros)</span></div>
+            <div style="font-size:2rem; font-weight:900; color:#dc2626;">,</div>
+            <div style="text-align:center;"><strong style="color:#2563eb; font-size:1.6rem;">25</strong><br><span style="font-size:0.9rem; color:#64748b;">CENTAVOS (frações)</span></div>
+          </div>
+          <p>Lê-se: <em>Oitenta e cinco reais e vinte e cinco centavos</em>.</p>
+        </div>
+
+        <!-- SECTION 2: AS 4 FÓRMULAS DE OURO -->
+        <div class="ref-section">
+          <h3>📐 2. As 4 Fórmulas de Ouro para Não Errar Nenhuma Conta</h3>
+          <div class="formula-card">
+            <div class="formula-title">1. Como Calcular o Troco:</div>
+            <div>Quando você entrega uma nota de valor maior que a compra:</div>
+            <div class="formula-code">Troco = Dinheiro Pago - Valor da Compra</div>
+          </div>
+          <div class="formula-card">
+            <div class="formula-title">2. Como Descobrir o Preço da Compra:</div>
+            <div>Se você sabe quanto pagou e quanto recebeu de troco:</div>
+            <div class="formula-code">Preço = Dinheiro Pago - Troco</div>
+          </div>
+          <div class="formula-card">
+            <div class="formula-title">3. Como Saber Quanto Dinheiro Foi Pago:</div>
+            <div>Juntando o valor do produto e o troco que voltou:</div>
+            <div class="formula-code">Dinheiro Pago = Preço da Compra + Troco</div>
+          </div>
+          <div class="formula-card">
+            <div class="formula-title">4. Saldo ou Sobra do Orçamento:</div>
+            <div>O dinheiro que sobrou depois de pagar as despesas:</div>
+            <div class="formula-code">Saldo / Sobra = Dinheiro Inicial - Gastos Totais</div>
+          </div>
+        </div>
+
+        <!-- SECTION 3: SUBTRAÇÃO COM EMPRÉSTIMO (CDU) -->
+        <div class="ref-section">
+          <h3>🧮 3. O Segredo do Empréstimo na Subtração (CDU)</h3>
+          <p><strong>Cuidado especial com contas com zeros (como 200 - 168):</strong></p>
+          <div class="trap-box">
+            <h4>💡 Por que 200 - 168 é R$ 32,00 (e NÃO R$ 38,00)?</h4>
+            <pre class="math-box">
+  C  D  U
+  1  9 10   <-- A centena emprestou 1 dezena (ficou 1).
+  2  0  0       A dezena recebeu 10, mas teve que emprestar 1 para a unidade.
+- 1  6  8       Por isso a dezena virou 9 (e NÃO 10)!
+---------
+  0  3  2
+            </pre>
+            <p>1º) Unidade: 10 - 8 = <strong>2</strong><br>
+            2º) Dezena: 9 - 6 = <strong>3</strong> (Se esquecer e fizer 10 - 6, você erra!)<br>
+            3º) Centena: 1 - 1 = <strong>0</strong><br>
+            <strong>Resultado exato: R$ 32,00!</strong></p>
+          </div>
+        </div>
+
+        <!-- SECTION 4: MOEDAS E EQUIVALÊNCIAS -->
+        <div class="ref-section">
+          <h3>🪙 4. Todas as Moedas do Brasil e Como Formar R$ 1,00</h3>
+          <p>Lembre-se: <strong>1 Real = 100 Centavos</strong>.</p>
+          <div class="coins-grid">
+            <div class="coin-badge coin-1c">1¢<br><span style="font-size:0.75rem;">1 centavo</span></div>
+            <div class="coin-badge coin-5c">5¢<br><span style="font-size:0.75rem;">5 centavos</span></div>
+            <div class="coin-badge coin-10c">10¢<br><span style="font-size:0.75rem;">10 centavos</span></div>
+            <div class="coin-badge coin-25c">25¢<br><span style="font-size:0.75rem;">25 centavos</span></div>
+            <div class="coin-badge coin-50c">50¢<br><span style="font-size:0.75rem;">50 centavos</span></div>
+            <div class="coin-badge coin-1r">R$ 1<br><span style="font-size:0.75rem;">1 real</span></div>
+          </div>
+          <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:14px; margin-top:10px;">
+            <strong>Para formar exatamente R$ 1,00 você precisa de:</strong><br>
+            • <strong>2</strong> moedas de 50 centavos (50 + 50 = 100)<br>
+            • <strong>4</strong> moedas de 25 centavos (25 x 4 = 100)<br>
+            • <strong>10</strong> moedas de 10 centavos (10 x 10 = 100)<br>
+            • <strong>20</strong> moedas de 5 centavos (20 x 5 = 100)<br>
+            • <strong>100</strong> moedas de 1 centavo
+          </div>
+        </div>
+
+        <!-- SECTION 5: TODAS AS CÉDULAS -->
+        <div class="ref-section">
+          <h3>💵 5. Todas as Cédulas Oficiais do Real</h3>
+          <div class="bills-grid">
+            <div class="bill-card bill-2"><div class="bill-val">R$ 2</div><div class="bill-animal">Tartaruga-marinha</div></div>
+            <div class="bill-card bill-5"><div class="bill-val">R$ 5</div><div class="bill-animal">Garça</div></div>
+            <div class="bill-card bill-10"><div class="bill-val">R$ 10</div><div class="bill-animal">Arara</div></div>
+            <div class="bill-card bill-20"><div class="bill-val">R$ 20</div><div class="bill-animal">Mico-leão-dourado</div></div>
+            <div class="bill-card bill-50"><div class="bill-val">R$ 50</div><div class="bill-animal">Onça-pintada</div></div>
+            <div class="bill-card bill-100"><div class="bill-val">R$ 100</div><div class="bill-animal">Garoupa (Peixe)</div></div>
+            <div class="bill-card bill-200"><div class="bill-val">R$ 200</div><div class="bill-animal">Lobo-guará</div></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST MESSAGE -->
+  <div id="toast"></div>
+
+  <!-- JAVASCRIPT APPLICATION SCRIPT -->
+  <script>
+    // Missions database
+    const MISSIONS = [{"id": "missao-1", "number": 1, "title": "Ilha 1: O Surgimento do Dinheiro e Nosso Sistema", "pages_label": "Páginas 54 a 58 do Livro", "desc": "A vitrine de brinquedos da Sara, o presente da amiga, do escambo ao Pix, a regra da vírgula e o cofrinho!", "badge": "Explorador da Moeda", "color": "#10b981", "icon": "🪙", "questions": [{"id": "p54_q1", "page": "Página 54", "title": "A Vitrine da Loja de Brinquedos da Sara", "story": "Sara e o pai foram à loja de brinquedos para escolher um presente para a melhor amiga dela. Na prateleira, eles observaram quatro brinquedos com seus preços:<br><br><div class='toy-grid'>  <div class='toy-card'><span class='toy-icon'>🧸</span><div class='toy-name'>Ursinho de Pelúcia</div><div class='toy-price'>R$ 65,00</div></div>  <div class='toy-card'><span class='toy-icon'>⚽</span><div class='toy-name'>Bola Colorida</div><div class='toy-price'>R$ 20,00</div></div>  <div class='toy-card'><span class='toy-icon'>🐰</span><div class='toy-name'>Bicho de Pelúcia</div><div class='toy-price'>R$ 85,25</div></div>  <div class='toy-card'><span class='toy-icon'>👧</span><div class='toy-name'>Boneca Grande</div><div class='toy-price'>R$ 120,50</div></div></div>", "prompt": "Observe os preços na prateleira e responda:", "subquestions": [{"id": "p54_s1", "text": "1. Qual é o brinquedo MAIS CARO da prateleira?", "type": "radio", "options": [{"val": "boneca", "text": "Boneca Grande — R$ 120,50", "correct": true}, {"val": "coelho", "text": "Bicho de Pelúcia — R$ 85,25", "correct": false}, {"val": "urso", "text": "Ursinho de Pelúcia — R$ 65,00", "correct": false}, {"val": "bola", "text": "Bola Colorida — R$ 20,00", "correct": false}], "explain": "Comparando os números: R$ 120,50 é o maior valor (possui 1 centena, 2 dezenas e 50 centavos). Ordem decrescente: R$ 120,50 > R$ 85,25 > R$ 65,00 > R$ 20,00."}, {"id": "p54_s2", "text": "2. Qual é o brinquedo MAIS BARATO da prateleira?", "type": "radio", "options": [{"val": "bola", "text": "Bola Colorida — R$ 20,00", "correct": true}, {"val": "urso", "text": "Ursinho de Pelúcia — R$ 65,00", "correct": false}, {"val": "coelho", "text": "Bicho de Pelúcia — R$ 85,25", "correct": false}, {"val": "boneca", "text": "Boneca Grande — R$ 120,50", "correct": false}], "explain": "O menor valor entre todos os brinquedos da vitrine é R$ 20,00 (Bola Colorida)."}, {"id": "p54_s3", "text": "3. O pai de Sara combinou que o presente deve custar ATÉ R$ 100,00. Quais brinquedos eles podem escolher sem ultrapassar esse limite?", "type": "checkbox", "options": [{"val": "bola", "text": "Bola Colorida (R$ 20,00)", "correct": true}, {"val": "urso", "text": "Ursinho de Pelúcia (R$ 65,00)", "correct": true}, {"val": "coelho", "text": "Bicho de Pelúcia (R$ 85,25)", "correct": true}, {"val": "boneca", "text": "Boneca Grande (R$ 120,50)", "correct": false}], "explain": "Podem escolher qualquer brinquedo com preço menor ou igual a R$ 100,00: a Bola (20 < 100), o Urso (65 < 100) e o Bicho de Pelúcia (85,25 < 100). A Boneca custa R$ 120,50, ultrapassando o limite em R$ 20,50!"}]}, {"id": "p55_q1", "page": "Página 55", "title": "O Presente de R$ 85,25 para a Amiga", "story": "Sara escolheu comprar o bicho de pelúcia de <strong>R$ 85,25</strong> para a melhor amiga.<br>Qual grupo de cédulas e moedas abaixo representa o <strong>valor exato</strong> para pagar no caixa sem troco?", "subquestions": [{"id": "p55_s1", "text": "Assinale a opção com o valor exato de R$ 85,25:", "type": "radio", "options": [{"val": "op1", "text": "1 nota de R$ 50 + 1 nota de R$ 20 + 1 nota de R$ 10 + 1 nota de R$ 5 + 1 moeda de 25 centavos", "correct": true}, {"val": "op2", "text": "1 nota de R$ 50 + 2 notas de R$ 20 + 1 nota de R$ 5 + 1 moeda de 25 centavos", "correct": false}, {"val": "op3", "text": "1 nota de R$ 50 + 1 nota de R$ 20 + 1 nota de R$ 10 + 1 moeda de 50 centavos", "correct": false}], "explain": "Vamos somar a Opção 1:<br>• 50 + 20 = 70 reais<br>• 70 + 10 = 80 reais<br>• 80 + 5 = 85 reais<br>• Mais a moeda de 25 centavos = <strong>R$ 85,25</strong>!<br>Na Opção 2 daria R$ 95,25 (10 reais a mais). Na Opção 3 daria R$ 80,50."}], "caderno": "✏️ Atividade do Caderno/Livro: No livro há um espaço de etiqueta para desenhar um brinquedo de até R$ 100,00 e desenhar as notas para pagar sem troco."}, {"id": "p56_q1", "page": "Página 56", "title": "A História do Dinheiro: Do Escambo ao Papel-Moeda", "story": "Sara e o pai usaram cédulas e moedas na loja. Mas nem sempre existiu dinheiro de papel e moeda no mundo!", "subquestions": [{"id": "p56_s1", "text": "1. Antes da invenção das moedas, as pessoas trocavam diretamente mercadorias (exemplo: trocar sacos de milho por peixe). Qual é o nome dessa prática de troca direta?", "type": "radio", "options": [{"val": "escambo", "text": "Escambo", "correct": true}, {"val": "comercio_online", "text": "Comércio Online", "correct": false}, {"val": "leilao", "text": "Leilão", "correct": false}], "explain": "<strong>Escambo</strong> é a troca direta de mercadorias sem a intermediação de moeda ou cédulas."}, {"id": "p56_s2", "text": "2. Por que o escambo começou a ficar difícil para as pessoas?", "type": "radio", "options": [{"val": "dificuldade", "text": "Porque nem sempre uma pessoa desejava o produto da outra e era difícil definir o valor justo de cada troca", "correct": true}, {"val": "proibido", "text": "Porque os agricultores não queriam mais plantar alimentos", "correct": false}], "explain": "Imagine um tecelão querendo peixe: se o pescador já tivesse tecido, a troca não acontecia! Por isso inventaram o dinheiro como medida universal aceita por todos."}, {"id": "p56_s3", "text": "3. Hoje em dia, além de moedas de metal e notas de papel, quais outras formas modernas usamos para pagar?", "type": "checkbox", "options": [{"val": "pix", "text": "Pix (transferência instantânea pelo celular)", "correct": true}, {"val": "cartao", "text": "Cartão de débito ou de crédito", "correct": true}, {"val": "escambo_sal", "text": "Troca de peixes por trigo no supermercado", "correct": false}], "explain": "Hoje usamos dinheiro físico, cartões magnéticos e sistemas digitais instantâneos como o Pix."}]}, {"id": "p57_q1", "page": "Página 57", "title": "O Sistema Monetário Brasileiro e a Regra da Vírgula", "story": "A moeda oficial do Brasil é o <strong>Real</strong>, com símbolo <strong>R$</strong>.<br>Veja como escrevemos o preço da boneca da vitrine: <strong>R$ 85,25</strong>.", "subquestions": [{"id": "p57_s1", "text": "1. O que a VÍRGULA faz na escrita do nosso dinheiro?", "type": "radio", "options": [{"val": "separa", "text": "Separa a parte inteira em REAIS (à esquerda) da parte dos CENTAVOS (à direita)", "correct": true}, {"val": "centena", "text": "Serve apenas para separar centenas de dezenas", "correct": false}], "explain": "<strong>Regra de Ouro da Vírgula:</strong><br>À esquerda da vírgula: REAIS inteiros.<br>À direita da vírgula: CENTAVOS (frações de 1 real de 00 a 99)."}, {"id": "p57_s2", "text": "2. Como se lê corretamente por extenso a quantia R$ 85,25?", "type": "radio", "options": [{"val": "oitenta_e_cinco", "text": "Oitenta e cinco reais e vinte e cinco centavos", "correct": true}, {"val": "oitenta_vinte", "text": "Oitenta e cinco reais e vinte centavos", "correct": false}, {"val": "oitocentos", "text": "Oitocentos e cinquenta e dois reais", "correct": false}], "explain": "85 = oitenta e cinco reais. 25 = vinte e cinco centavos. Lê-se: <em>Oitenta e cinco reais e vinte e cinco centavos</em>."}, {"id": "p57_s3", "text": "3. O brinquedo mais caro custava R$ 120,50. É possível pagar R$ 120,50 usando APENAS CÉDULAS, sem moedas e sem troco?", "type": "radio", "options": [{"val": "nao", "text": "Não, porque a menor cédula é de R$ 2,00. Os 50 centavos exigem moeda!", "correct": true}, {"val": "sim", "text": "Sim, existe nota de 50 centavos", "correct": false}], "explain": "Não existem notas de centavos no Brasil! Para pagar os 50 centavos exatos, é necessário usar moeda (uma de 50¢ ou duas de 25¢)."}]}, {"id": "p58_q1", "page": "Página 58", "title": "O Cofrinho da Sara: Economia e Compras", "story": "Sara levou todo o dinheiro que havia economizado no seu cofrinho: exatamente <strong>R$ 80,00</strong>.<br>Ela viu três opções de brinquedos na loja:<br>• <strong>Opção 1:</strong> Boneca Grande por <strong>R$ 85,25</strong><br>• <strong>Opção 2:</strong> Ursinho de Pelúcia por <strong>R$ 65,00</strong><br>• <strong>Opção 3:</strong> Jogo 4 em 1 por <strong>R$ 35,00</strong>", "subquestions": [{"id": "p58_s1", "text": "1. Sara tem dinheiro suficiente para comprar a Boneca de R$ 85,25?", "type": "radio", "options": [{"val": "nao", "text": "Não, porque R$ 85,25 é maior que R$ 80,00 (faltam R$ 5,25)", "correct": true}, {"val": "sim", "text": "Sim, o dinheiro dela é suficiente", "correct": false}], "explain": "85,25 > 80,00. Faltam R$ 5,25 para ela conseguir comprar a boneca."}, {"id": "p58_s2", "text": "2. Sara decidiu comprar o Ursinho de R$ 65,00. Quanto dinheiro vai SOBRAR do cofrinho dela?", "type": "input_number", "correct": 15, "unit": "reais", "prefix": "R$", "explain": "<strong>Conta Armada (Subtração CDU):</strong><br><pre class='math-box'>   D  U\n   7 10   (o 8 das dezenas emprestou 1 para a unidade)\n   8  0\n - 6  5\n -------\n   1  5\n</pre>10 - 5 = 5 unidades.<br>7 - 6 = 1 dezena.<br>Resultado: Vão sobrar <strong>R$ 15,00</strong>!"}, {"id": "p58_s3", "text": "3. Para pagar os R$ 65,00 do urso sem precisar de troco, qual grupo de cédulas ela pode entregar?", "type": "radio", "options": [{"val": "3x20_1x5", "text": "3 notas de R$ 20,00 e 1 nota de R$ 5,00 (20 + 20 + 20 + 5 = 65)", "correct": true}, {"val": "2x20_2x10", "text": "2 notas de R$ 20,00 e 2 notas de R$ 10,00 (dá 60 reais)", "correct": false}, {"val": "1x50_2x10", "text": "1 nota de R$ 50,00 e 2 notas de R$ 10,00 (dá 70 reais)", "correct": false}], "explain": "3 notas de 20 reais = 60 reais. Mais uma nota de 5 reais = 65 reais exatos!"}]}]}, {"id": "missao-2", "number": 2, "title": "Ilha 2: Cédulas, Moedas e o Troco", "pages_label": "Páginas 59 a 64 do Livro", "desc": "Conhecendo todo o dinheiro brasileiro, equivalências de moedas, escrita por extenso e o troco de Isaque, Luísa e Felipe!", "badge": "Mestre do Troco", "color": "#3b82f6", "icon": "💵", "questions": [{"id": "p59_q1", "page": "Página 59", "title": "O Dinheiro Brasileiro: Moedas e Equivalências de R$ 1,00", "story": "No Brasil circulam cédulas de <strong>2, 5, 10, 20, 50, 100 e 200 reais</strong>, e moedas de <strong>1, 5, 10, 25, 50 centavos e 1 real</strong>.<br>Lembre-se que <strong>100 centavos valem exatamente R$ 1,00</strong>!", "subquestions": [{"id": "p59_s1", "text": "1. Quantas moedas de 50 centavos são necessárias para formar R$ 1,00?", "type": "input_number", "correct": 2, "unit": "moedas", "explain": "50 + 50 = 100 centavos = R$ 1,00. São necessárias <strong>2 moedas</strong> de 50 centavos."}, {"id": "p59_s2", "text": "2. Quantas moedas de 25 centavos são necessárias para formar R$ 1,00?", "type": "input_number", "correct": 4, "unit": "moedas", "explain": "25 + 25 + 25 + 25 = 100 centavos = R$ 1,00. São necessárias <strong>4 moedas</strong> de 25 centavos."}, {"id": "p59_s3", "text": "3. Quantas moedas de 10 centavos são necessárias para formar R$ 1,00?", "type": "input_number", "correct": 10, "unit": "moedas", "explain": "10 x 10 centavos = 100 centavos = R$ 1,00. São necessárias <strong>10 moedas</strong> de 10 centavos."}]}, {"id": "p60_q1", "page": "Página 60", "title": "Leitura, Escrita por Extenso e Armadilhas do Caderno", "story": "Atenção especial! Vamos treinar a escrita dos valores por extenso com muita atenção aos centavos e à ortografia correta das palavras!", "subquestions": [{"id": "p60_s1", "text": "1. Alice somou: 1 nota de R$ 50 + 1 nota de R$ 5 + 1 moeda de R$ 1 + 1 moeda de 25 centavos. Qual é o valor e como se escreve por extenso?", "type": "radio", "options": [{"val": "56_25", "text": "R$ 56,25 — Cinquenta e seis reais e vinte e cinco centavos", "correct": true}, {"val": "56_20", "text": "R$ 56,20 — Cinquenta e seis reais e vinte centavos (Cuidado!)", "correct": false}, {"val": "66_25", "text": "R$ 66,25 — Sessenta e seis reais e vinte e cinco centavos", "correct": false}], "explain": "50 + 5 + 1 = 56 reais. A moeda é de 25 centavos.<br><span class='trap-alert'>⚠️ Cuidado com a pegadinha do caderno:</span> não se esqueça do 'cinco' nos centavos! É <strong>cinquenta e seis reais e vinte e cinco centavos</strong>."}, {"id": "p60_s2", "text": "2. Somando 1 moeda de 50 centavos, 1 de 25 centavos, 1 de 10 centavos e 1 de 5 centavos: qual é o total e a escrita correta?", "type": "radio", "options": [{"val": "noventa", "text": "90 centavos — escrito corretamente como: 'Noventa centavos'", "correct": true}, {"val": "no_venta", "text": "90 centavos — escrito como: 'No venta centavos' (Erro de separação!)", "correct": false}, {"val": "oitenta", "text": "80 centavos — Oitenta centavos", "correct": false}], "explain": "50 + 25 = 75; 75 + 10 = 85; 85 + 5 = 90 centavos.<br><span class='trap-alert'>⚠️ Grafia correta:</span> a palavra <strong>noventa</strong> é escrita junta, com N e V (nunca separada como 'no venta')."}, {"id": "p60_s3", "text": "3. Somando 2 moedas de 25 centavos, 1 de 10 centavos e 1 de 5 centavos: quanto temos e qual a escrita correta?", "type": "radio", "options": [{"val": "sessenta_e_cinco", "text": "65 centavos — escrito: 'Sessenta e cinco centavos'", "correct": true}, {"val": "assenta", "text": "65 centavos — escrito: 'Assenta e cinco centavos' (Erro de ortografia!)", "correct": false}], "explain": "25 + 25 = 50; 50 + 10 = 60; 60 + 5 = 65 centavos.<br><span class='trap-alert'>⚠️ Ortografia correta:</span> escreve-se <strong>sessenta</strong> (com dois S e terminação -enta), nunca 'assenta'."}]}, {"id": "p61_q1", "page": "Página 61", "title": "Isaque e o Livro de R$ 48,00", "story": "Isaque foi à livraria e escolheu um livro infantil de <strong>R$ 48,00</strong>.<br>No bolso, Isaque tinha:<br>• 2 cédulas de <strong>R$ 20,00</strong><br>• 1 cédula de <strong>R$ 10,00</strong>", "subquestions": [{"id": "p61_s1", "text": "1. Quanto dinheiro Isaque tem ao todo?", "type": "input_number", "correct": 50, "unit": "reais", "prefix": "R$", "explain": "20 + 20 = 40. 40 + 10 = <strong>R$ 50,00</strong>."}, {"id": "p61_s2", "text": "2. O dinheiro de Isaque é suficiente para comprar o livro de R$ 48,00?", "type": "radio", "options": [{"val": "sim", "text": "Sim, porque R$ 50,00 é maior que R$ 48,00 (sobrará troco)", "correct": true}, {"val": "nao", "text": "Não, faltam 2 reais", "correct": false}], "explain": "50 > 48. O dinheiro é suficiente e Isaque ainda receberá troco."}, {"id": "p61_s3", "text": "3. Quanto Isaque vai receber de TROCO?", "type": "input_number", "correct": 2, "unit": "reais", "prefix": "R$", "explain": "Fórmula do Troco:<br><strong>Troco = Dinheiro Pago - Preço da Compra</strong><br>Troco = 50 - 48 = <strong>R$ 2,00</strong> (ele pode receber 1 moeda de R$ 2 ou 1 cédula de R$ 2,00)."}]}, {"id": "p62_q1", "page": "Página 62", "title": "Luísa e Felipe na Lanchonete da Escola", "story": "Veja o cardápio da lanchonete da escola:<br><br><div class='menu-card-grid'>  <div class='menu-item'><span class='menu-icon'>🥪</span> <div>Sanduíche Natural</div> <strong>R$ 12,00</strong></div>  <div class='menu-item'><span class='menu-icon'>🧃</span> <div>Suco de Fruta</div> <strong>R$ 6,00</strong></div>  <div class='menu-item'><span class='menu-icon'>🥣</span> <div>Salada de Frutas</div> <strong>R$ 8,00</strong></div>  <div class='menu-item'><span class='menu-icon'>🧀</span> <div>Pão de Queijo</div> <strong>R$ 4,00</strong></div></div>", "subquestions": [{"id": "p62_s1", "text": "1. Luísa comprou 1 Sanduíche Natural (R$ 12,00) e 1 Suco (R$ 6,00). Pagou com uma cédula de R$ 20,00. Qual foi o seu troco?", "type": "input_number", "correct": 2, "unit": "reais", "prefix": "R$", "explain": "Passo 1: Gasto da Luísa = 12 + 6 = R$ 18,00.<br>Passo 2: Troco = 20 - 18 = <strong>R$ 2,00</strong>."}, {"id": "p62_s2", "text": "2. Felipe comprou 1 Salada de Frutas (R$ 8,00), 1 Suco (R$ 6,00) e 1 Pão de Queijo (R$ 4,00). Pagou com uma cédula de R$ 50,00. Qual foi o seu troco?", "type": "input_number", "correct": 32, "unit": "reais", "prefix": "R$", "explain": "Passo 1: Gasto do Felipe = 8 + 6 + 4 = R$ 18,00.<br>Passo 2: Troco = 50 - 18 = <strong>R$ 32,00</strong>.<br>(50 - 10 = 40; 40 - 8 = 32)."}, {"id": "p62_s3", "text": "3. Comparando o que Luísa e Felipe gastaram no lanche, quem gastou mais?", "type": "radio", "options": [{"val": "iguais", "text": "Os dois gastaram a mesma quantia (R$ 18,00 cada um)", "correct": true}, {"val": "luisa", "text": "Luísa gastou mais", "correct": false}, {"val": "felipe", "text": "Felipe gastou mais", "correct": false}], "explain": "Luísa gastou 12 + 6 = R$ 18,00. Felipe gastou 8 + 6 + 4 = R$ 18,00. Gastaram exatamente o mesmo valor!"}]}, {"id": "p63_q1", "page": "Página 63", "title": "Daniele e a Compra de 3 Estojos Escolares", "story": "Daniele foi comprar estojos escolares para ela e seus dois irmãos. Ela comprou <strong>3 estojos iguais</strong>, custando <strong>R$ 14,00 cada um</strong>.<br>Daniele entregou uma nota de <strong>R$ 50,00</strong> no caixa.", "subquestions": [{"id": "p63_s1", "text": "1. Qual foi o valor total da compra dos 3 estojos?", "type": "input_number", "correct": 42, "unit": "reais", "prefix": "R$", "explain": "Multiplicação: 3 x 14 = <strong>R$ 42,00</strong>.<br>(Ou por adição: 14 + 14 + 14 = 28 + 14 = 42 reais)."}, {"id": "p63_s2", "text": "2. Quanto Daniele recebeu de troco ao pagar com os R$ 50,00?", "type": "input_number", "correct": 8, "unit": "reais", "prefix": "R$", "explain": "Troco = 50 - 42 = <strong>R$ 8,00</strong>.<br>(Subtração: 50 vira 4 dezenas e 10 unidades. 10 - 2 = 8 unidades. 4 - 4 = 0 dezenas)."}, {"id": "p63_s3", "text": "3. Se Daniele quisesse comprar uma mochila de R$ 78,00 e pagasse com uma nota de R$ 100,00, qual seria o troco?", "type": "input_number", "correct": 22, "unit": "reais", "prefix": "R$", "explain": "100 - 78 = <strong>R$ 22,00</strong>.<br>Cálculo mental: 100 - 70 = 30. 30 - 8 = 22 reais!"}]}, {"id": "p64_q1", "page": "Página 64", "title": "Os Desafios do Troco de Mariana e Juliano", "story": "Vamos praticar mais duas situações de troco com Mariana e Juliano!", "subquestions": [{"id": "p64_s1", "text": "1. Mariana comprou 1 caderno de R$ 23,00 e 1 caneta de R$ 7,00. Pagou com uma cédula de R$ 50,00. Qual foi o troco dela?", "type": "input_number", "correct": 20, "unit": "reais", "prefix": "R$", "explain": "Passo 1: Total da compra = 23 + 7 = R$ 30,00.<br>Passo 2: Troco = 50 - 30 = <strong>R$ 20,00</strong>."}, {"id": "p64_s2", "text": "2. Juliano comprou um jogo de tabuleiro por R$ 64,00 e pagou com DUAS notas de R$ 50,00 (total de R$ 100,00). Qual foi o troco dele?", "type": "input_number", "correct": 36, "unit": "reais", "prefix": "R$", "explain": "Total pago = 50 + 50 = R$ 100,00.<br>Troco = 100 - 64 = <strong>R$ 36,00</strong>.<br><pre class='math-box'>  C  D  U\n  0  9 10   (1 centena vira 9 dezenas e 10 unidades)\n  1  0  0\n-    6  4\n----------\n     3  6\n</pre>10 - 4 = 6 unidades. 9 - 6 = 3 dezenas. Troco = R$ 36,00."}]}]}, {"id": "missao-3", "number": 3, "title": "Ilha 3: Estratégias de Cálculo Mental e Algoritmo CDU", "pages_label": "Páginas 65 a 68 do Livro", "desc": "O método de decomposição da Sara, a armadilha crítica das 3 bolas de R$ 56 e a feira do Paulo!", "badge": "Estrategista Mental", "color": "#f59e0b", "icon": "🧠", "questions": [{"id": "p65_q1", "page": "Página 65", "title": "O Cálculo Mental da Sara por Decomposição", "story": "Sara tem uma estratégia genial para calcular subtrações mentalmente sem precisar de papel e lápis!<br>Veja como ela pensa para calcular <strong>85 - 28</strong>:<br>1º) Ela decompõe o 28 em <strong>20 + 8</strong>.<br>2º) Tira primeiro as dezenas: <strong>85 - 20 = 65</strong>.<br>3º) Depois tira as unidades restantes: <strong>65 - 8 = 57</strong>!<br>Ou então arredonda: 85 - 30 = 55, e compensa somando 2: 55 + 2 = 57!", "subquestions": [{"id": "p65_s1", "text": "1. Use a estratégia da Sara para calcular de cabeça: 74 - 26 =", "type": "input_number", "correct": 48, "unit": "", "explain": "Pensando como a Sara:<br>74 - 20 = 54.<br>54 - 6 = <strong>48</strong>!"}, {"id": "p65_s2", "text": "2. Calcule mentalmente: 92 - 35 =", "type": "input_number", "correct": 57, "unit": "", "explain": "Decompondo 35 em 30 + 5:<br>92 - 30 = 62.<br>62 - 5 = <strong>57</strong>!"}, {"id": "p65_s3", "text": "3. Calcule mentalmente: 150 - 68 =", "type": "input_number", "correct": 82, "unit": "", "explain": "150 - 60 = 90.<br>90 - 8 = <strong>82</strong>! (Ou 150 - 70 = 80, 80 + 2 = 82)."}]}, {"id": "p66_q1", "page": "Página 66", "title": "A Grande Armadilha do Caderno: 3 Bolas de R$ 56 e o Troco de R$ 200", "story": "⚠️ <strong>ATENÇÃO MÁXIMA NESTA QUESTÃO!</strong><br>Esta foi a questão onde o caderno teve uma dúvida importante entre <strong>R$ 32,00</strong> e <strong>R$ 38,00</strong>.<br><br>O problema diz: Uma escola comprou <strong>3 bolas de futebol por R$ 56,00 cada uma</strong>.<br>O pagamento foi feito com uma nota de <strong>R$ 200,00</strong>.", "subquestions": [{"id": "p66_s1", "text": "1. Qual é o valor total das 3 bolas (3 x 56)?", "type": "input_number", "correct": 168, "unit": "reais", "prefix": "R$", "explain": "Multiplicação armada:<br>3 x 6 unidades = 18 (fica 8 e vai 1 dezena).<br>3 x 5 dezenas = 15 + 1 = 16 dezenas.<br>Total: <strong>R$ 168,00</strong>.<br>(Ou por decomposição: 3 x 50 = 150; 3 x 6 = 18; 150 + 18 = 168)."}, {"id": "p66_s2", "text": "2. Pagando os R$ 168,00 com R$ 200,00, qual é o TROCO EXATO?", "type": "radio", "options": [{"val": "32", "text": "R$ 32,00 (Resposta Correta)", "correct": true}, {"val": "38", "text": "R$ 38,00 (⚠️ Atenção! Erro comum do empréstimo!)", "correct": false}, {"val": "42", "text": "R$ 42,00", "correct": false}], "explain": "<div class='trap-box'><h4>🔍 Por que a resposta é R$ 32,00 e NUNCA R$ 38,00?</h4>Veja a conta armada com os empréstimos passo a passo:<br><pre class='math-box'>  C  D  U\n  1  9 10   <-- Atenção aqui!\n  2  0  0\n- 1  6  8\n----------\n  0  3  2\n</pre><strong>Passo 1:</strong> Na unidade temos 0 - 8 (não dá).<br><strong>Passo 2:</strong> A centena (2) empresta 1 e vira <strong>1</strong>. A dezena recebe 10.<br><strong>Passo 3:</strong> A dezena tem 10, mas PRECISA emprestar 1 para a unidade! Então a dezena fica valendo <strong>9</strong> (e não 10!).<br><strong>Passo 4:</strong> A unidade fica com 10: 10 - 8 = <strong>2</strong>.<br><strong>Passo 5:</strong> A dezena ficou com 9: 9 - 6 = <strong>3</strong> (Se você esquecer que ela emprestou e fizer 10 - 6 achará 4, gerando o erro!).<br><strong>Passo 6:</strong> A centena ficou com 1: 1 - 1 = 0.<br><strong>Portanto, o troco correto é exatamente R$ 32,00!</strong></div>"}]}, {"id": "p67_q1", "page": "Página 67", "title": "Paulo e as Compras na Feira", "story": "Paulo foi à feira e comprou:<br>• 1 kg de tomates por <strong>R$ 8,50</strong><br>• 1 dúzia de bananas por <strong>R$ 6,50</strong><br>• 1 pacote de maçãs por <strong>R$ 12,00</strong><br>Ele levou uma cédula de <strong>R$ 50,00</strong>.", "subquestions": [{"id": "p67_s1", "text": "1. Quanto Paulo gastou ao todo na feira?", "type": "input_number", "correct": 27, "unit": "reais", "prefix": "R$", "explain": "Somando com atenção aos centavos:<br>8,50 + 6,50 = 15,00 (50¢ + 50¢ = R$ 1,00; 8 + 6 = 14 + 1 = 15).<br>15,00 + 12,00 = <strong>R$ 27,00</strong>."}, {"id": "p67_s2", "text": "2. Quanto sobrou de troco para Paulo?", "type": "input_number", "correct": 23, "unit": "reais", "prefix": "R$", "explain": "Troco = 50 - 27 = <strong>R$ 23,00</strong>.<br>(50 - 20 = 30; 30 - 7 = 23 reais)."}, {"id": "p67_s3", "text": "3. Com os R$ 23,00 de troco, Paulo quer comprar um melão de R$ 15,00. Ele consegue? Quanto ainda vai sobrar?", "type": "input_number", "correct": 8, "unit": "reais", "prefix": "R$", "explain": "Sim, ele consegue pois 23 > 15.<br>Sobra final: 23 - 15 = <strong>R$ 8,00</strong>."}]}, {"id": "p68_q1", "page": "Página 68", "title": "O Planejamento e a Meta de Poupança da Clara", "story": "Clara tem um sonho: comprar um lindo patins que custa <strong>R$ 160,00</strong>.<br>Para isso, ela guardou no cofre durante 3 meses:<br>• Janeiro: <strong>R$ 25,00</strong><br>• Fevereiro: <strong>R$ 35,00</strong><br>• Março: <strong>R$ 40,00</strong>", "subquestions": [{"id": "p68_s1", "text": "1. Quanto Clara já conseguiu economizar nesses 3 meses?", "type": "input_number", "correct": 100, "unit": "reais", "prefix": "R$", "explain": "25 + 35 = 60 reais. 60 + 40 = <strong>R$ 100,00</strong>."}, {"id": "p68_s2", "text": "2. Quanto dinheiro ainda falta para Clara atingir a meta de R$ 160,00?", "type": "input_number", "correct": 60, "unit": "reais", "prefix": "R$", "explain": "Falta = Valor do Patins - Valor Guardado = 160 - 100 = <strong>R$ 60,00</strong>."}, {"id": "p68_s3", "text": "3. Se Clara conseguir guardar R$ 20,00 todo mês a partir de agora, em quantos meses ela conseguirá juntar os R$ 60,00 que faltam?", "type": "input_number", "correct": 3, "unit": "meses", "explain": "Divisão por parcelas iguais:<br>1º mês: 20<br>2º mês: 20 + 20 = 40<br>3º mês: 40 + 20 = 60.<br>São necessários <strong>3 meses</strong> (60 ÷ 20 = 3)."}]}]}, {"id": "missao-4", "number": 4, "title": "Ilha 4: Orçamento Familiar e Problemas em Etapas", "pages_label": "Páginas 69 a 73 do Livro", "desc": "Débito vs Crédito, o orçamento familiar do Lucas, comparando preços no mercado e a papelaria da Fátima!", "badge": "Planejador Financeiro", "color": "#8b5cf6", "icon": "📊", "questions": [{"id": "p69_q1", "page": "Página 69", "title": "Contas no Banco: Cartão de Débito vs Cartão de Crédito", "story": "No banco, as pessoas guardam seu dinheiro com segurança. Elas podem usar cartões eletrônicos para fazer pagamentos.", "subquestions": [{"id": "p69_s1", "text": "1. Quando uma pessoa paga usando o CARTÃO DE DÉBITO, o que acontece com o dinheiro dela?", "type": "radio", "options": [{"val": "debito", "text": "O valor é descontado imediatamente do saldo que ela tem na conta do banco", "correct": true}, {"val": "emprestimo", "text": "O banco dá o produto de graça", "correct": false}, {"val": "futuro", "text": "O valor só é cobrado depois de 5 anos", "correct": false}], "explain": "No <strong>Débito</strong>, o dinheiro sai da sua conta na mesma hora. Você só pode gastar o que tiver de saldo!"}, {"id": "p69_s2", "text": "2. E quando a pessoa paga com CARTÃO DE CRÉDITO?", "type": "radio", "options": [{"val": "credito", "text": "O banco paga a loja na hora e envia uma fatura para a pessoa pagar no mês seguinte", "correct": true}, {"val": "sorteio", "text": "A pessoa ganha pontos mas nunca precisa pagar nada", "correct": false}], "explain": "No <strong>Crédito</strong>, o banco faz um empréstimo temporário: junta todos os gastos numa fatura mensal para ser paga até o dia do vencimento."}]}, {"id": "p70_q1", "page": "Página 70", "title": "O Orçamento Familiar da Casa do Lucas", "story": "A família do Lucas organizou todas as contas do mês numa tabela de orçamento:<br><br>• <strong>Entradas (Renda total da família):</strong> R$ 3.200,00<br>• <strong>Despesas do mês:</strong><br>  - Aluguel da casa: R$ 1.100,00<br>  - Compras de alimentação: R$ 950,00<br>  - Contas de água e luz: R$ 350,00<br>  - Transporte e combustível: R$ 400,00", "subquestions": [{"id": "p70_s1", "text": "1. Qual é o valor TOTAL das despesas da família do Lucas neste mês?", "type": "input_number", "correct": 2800, "unit": "reais", "prefix": "R$", "explain": "Somando as quatro despesas:<br>1.100 + 950 = 2.050<br>2.050 + 350 = 2.400<br>2.400 + 400 = <strong>R$ 2.800,00</strong>."}, {"id": "p70_s2", "text": "2. Sobrou dinheiro do salário no final do mês? Qual é o SALDO positivo?", "type": "input_number", "correct": 400, "unit": "reais", "prefix": "R$", "explain": "Fórmula do Saldo:<br><strong>Saldo = Entradas - Despesas</strong><br>Saldo = 3.200 - 2.800 = <strong>R$ 400,00</strong>.<br>Como o resultado é maior que zero, é um saldo positivo (a família conseguiu economizar!)."}]}, {"id": "p71_q1", "page": "Página 71", "title": "Comparando Preços no Supermercado: Comprar Avulso ou Pacote?", "story": "Aprender a comparar preços nos ajuda a economizar bastante no supermercado!<br>Veja a oferta de sabonetes:<br>• <strong>Sabonete avulso (1 unidade):</strong> R$ 4,00<br>• <strong>Pacote promocional com 3 unidades:</strong> R$ 9,00", "subquestions": [{"id": "p71_s1", "text": "1. Quanto custariam 3 sabonetes se fossem comprados avulsos?", "type": "input_number", "correct": 12, "unit": "reais", "prefix": "R$", "explain": "3 unidades x R$ 4,00 = <strong>R$ 12,00</strong>."}, {"id": "p71_s2", "text": "2. Quantos reais a pessoa ECONOMIZA comprando o pacote promocional de 3 por R$ 9,00?", "type": "input_number", "correct": 3, "unit": "reais", "prefix": "R$", "explain": "Economia = Preço Avulso Total - Preço da Promoção = 12 - 9 = <strong>R$ 3,00 de economia</strong>!"}]}, {"id": "p72_q1", "page": "Página 72", "title": "As Compras da Fátima na Papelaria (Problema em 3 Etapas)", "story": "Fátima foi comprar materiais escolares para o novo semestre:<br>• <strong>2 cadernos universitários</strong> por R$ 18,00 cada um<br>• <strong>1 estojo completo</strong> por R$ 24,00<br>• <strong>1 caixa de lápis de cor</strong> por R$ 15,00<br>Fátima pagou no caixa com uma cédula de <strong>R$ 100,00</strong>.", "subquestions": [{"id": "p72_s1", "text": "1. Etapa 1: Quanto ela gastou apenas com os 2 cadernos?", "type": "input_number", "correct": 36, "unit": "reais", "prefix": "R$", "explain": "2 x 18 = <strong>R$ 36,00</strong>."}, {"id": "p72_s2", "text": "2. Etapa 2: Qual foi o valor TOTAL da compra da Fátima?", "type": "input_number", "correct": 75, "unit": "reais", "prefix": "R$", "explain": "Somando todos os itens:<br>Cadernos: R$ 36,00<br>Estojo: R$ 24,00<br>Lápis de cor: R$ 15,00<br>36 + 24 = 60 reais.<br>60 + 15 = <strong>R$ 75,00</strong>."}, {"id": "p72_s3", "text": "3. Etapa 3: Quanto Fátima recebeu de troco ao pagar com R$ 100,00?", "type": "input_number", "correct": 25, "unit": "reais", "prefix": "R$", "explain": "Troco = 100 - 75 = <strong>R$ 25,00</strong>.<br>(100 - 70 = 30; 30 - 5 = 25 reais)."}]}, {"id": "p73_q1", "page": "Página 73", "title": "A Loja de Calçados do Mário e o Empréstimo das Centenas", "story": "Na loja de calçados do senhor Mário, um cliente comprou um <strong>tênis esportivo por R$ 145,00</strong> e um <strong>par de meias por R$ 18,00</strong>.<br>Para pagar, o cliente entregou <strong>DUAS cédulas de R$ 100,00</strong> (total de R$ 200,00).", "subquestions": [{"id": "p73_s1", "text": "1. Qual foi o total da compra do cliente?", "type": "input_number", "correct": 163, "unit": "reais", "prefix": "R$", "explain": "145 + 18 = <strong>R$ 163,00</strong>.<br>(145 + 10 = 155; 155 + 8 = 163)."}, {"id": "p73_s2", "text": "2. Quanto o senhor Mário deve devolver de troco?", "type": "input_number", "correct": 37, "unit": "reais", "prefix": "R$", "explain": "Troco = 200 - 163 = <strong>R$ 37,00</strong>.<br><pre class='math-box'>  C  D  U\n  1  9 10\n  2  0  0\n- 1  6  3\n----------\n  0  3  7\n</pre>10 - 3 = 7 unidades.<br>9 - 6 = 3 dezenas.<br>1 - 1 = 0 centenas.<br>Troco exato: <strong>R$ 37,00</strong>!"}]}]}, {"id": "missao-5", "number": 5, "title": "Ilha 5: Empreendedorismo, Gráficos e Grande Desafio Final", "pages_label": "Páginas 74 a 80 do Livro", "desc": "A contagem dos cofres, a barraca de limonada, compras à vista vs a prazo, gráfico de economia e a Grande Prova dos Campeões!", "badge": "Grande Mestre da Matemática Financeira", "color": "#ec4899", "icon": "🏆", "questions": [{"id": "p74_q1", "page": "Página 74", "title": "O Desafio da Contagem Rápida dos Dois Cofres", "story": "Dois amigos abriram seus cofres para contar as economias.<br>• <strong>Cofre de Moedas:</strong> 5 moedas de R$ 1,00 + 8 moedas de 50 centavos + 12 moedas de 25 centavos.<br>• <strong>Cofre Misto:</strong> 2 notas de R$ 20 + 3 notas de R$ 10 + 7 notas de R$ 2 + 6 moedas de 50 centavos.", "subquestions": [{"id": "p74_s1", "text": "1. Quanto há no Cofre de Moedas?", "type": "input_number", "correct": 12, "unit": "reais", "prefix": "R$", "explain": "Contando por partes:<br>• 5 moedas de R$ 1 = R$ 5,00<br>• 8 moedas de 50¢ = 400 centavos = R$ 4,00<br>• 12 moedas de 25¢ = 300 centavos = R$ 3,00<br>Total: 5 + 4 + 3 = <strong>R$ 12,00</strong>."}, {"id": "p74_s2", "text": "2. Quanto há no Cofre Misto?", "type": "input_number", "correct": 87, "unit": "reais", "prefix": "R$", "explain": "Contando cada cédula e moeda:<br>• 2 x 20 = 40 reais<br>• 3 x 10 = 30 reais<br>• 7 x 2 = 14 reais<br>• 6 moedas de 50¢ = R$ 3,00<br>Total: 40 + 30 + 14 + 3 = 70 + 17 = <strong>R$ 87,00</strong>."}]}, {"id": "p75_q1", "page": "Página 75", "title": "A Barraca de Limonada do João e da Alice: Receita, Custo e Lucro", "story": "João e Alice montaram uma barraca de limonada fresca na feira da escola:<br>• Eles gastaram <strong>R$ 22,00</strong> comprando limões, açúcar e copos descartáveis (<strong>Custo</strong>).<br>• Eles venderam <strong>20 copos de suco por R$ 2,50 cada um</strong> (<strong>Faturamento</strong>).", "subquestions": [{"id": "p75_s1", "text": "1. Quanto dinheiro João e Alice arrecadaram com as vendas (Faturamento)?", "type": "input_number", "correct": 50, "unit": "reais", "prefix": "R$", "explain": "Multiplicação: 20 x 2,50 = <strong>R$ 50,00</strong>.<br>(10 copos x 2,50 = 25 reais; 20 copos = 25 + 25 = 50 reais)."}, {"id": "p75_s2", "text": "2. Qual foi o LUCRO real de João e Alice?", "type": "input_number", "correct": 28, "unit": "reais", "prefix": "R$", "explain": "Fórmula do Lucro:<br><strong>Lucro = Faturamento (Vendas) - Custos</strong><br>Lucro = 50 - 22 = <strong>R$ 28,00 de lucro líquido</strong>!"}]}, {"id": "p76_q1", "page": "Página 76", "title": "A Compra da Bicicleta: À Vista vs A Prazo", "story": "Uma família quer comprar uma bicicleta para o filho e encontrou duas opções de pagamento:<br>• <strong>Preço À Vista (pago na hora):</strong> R$ 280,00<br>• <strong>Preço A Prazo:</strong> 3 parcelas de R$ 105,00 no cartão", "subquestions": [{"id": "p76_s1", "text": "1. Qual é o valor total da bicicleta comprada A PRAZO?", "type": "input_number", "correct": 315, "unit": "reais", "prefix": "R$", "explain": "3 parcelas de 105 reais = 3 x 105 = <strong>R$ 315,00</strong>.<br>(3 x 100 = 300; 3 x 5 = 15; 300 + 15 = 315)."}, {"id": "p76_s2", "text": "2. Quantos reais a família economiza se decidir pagar À VISTA?", "type": "input_number", "correct": 35, "unit": "reais", "prefix": "R$", "explain": "Diferença = Preço a Prazo - Preço à Vista = 315 - 280 = <strong>R$ 35,00 de economia</strong>!"}]}, {"id": "p77_q1", "page": "Página 77", "title": "O Desafio dos Centavos no Caixa", "story": "No supermercado, os preços quase sempre têm centavos! Vamos praticar o troco rápido com centavos:", "subquestions": [{"id": "p77_s1", "text": "1. Uma barra de chocolate custa R$ 4,85 e você paga com uma moeda de R$ 5,00. Qual é o troco exato?", "type": "radio", "options": [{"val": "15", "text": "15 centavos (uma moeda de 10¢ e uma de 5¢)", "correct": true}, {"val": "25", "text": "25 centavos", "correct": false}, {"val": "5", "text": "5 centavos", "correct": false}], "explain": "5,00 - 4,85 = 0,15 (15 centavos). De 4,85 para 5,00 faltam 15 centavos (85 + 15 = 100 centavos)."}, {"id": "p77_s2", "text": "2. Um gibi custa R$ 19,65 e você paga com uma nota de R$ 20,00. Qual é o troco?", "type": "radio", "options": [{"val": "35", "text": "35 centavos (uma moeda de 25¢ e uma de 10¢)", "correct": true}, {"val": "45", "text": "45 centavos", "correct": false}], "explain": "20,00 - 19,65 = 0,35 (35 centavos). 65 + 35 = 100 centavos = 1 real!"}]}, {"id": "p78_q1", "page": "Página 78", "title": "O Gráfico de Poupança da Turma de Amigos", "story": "Veja o gráfico com o dinheiro economizado por 4 amigos da turma no mês:<br><br><div class='chart-container'>  <div class='bar-row'><span class='bar-label'>Alice</span><div class='bar-track'><div class='bar-fill' style='width:70%; background:#10b981;'>R$ 35,00</div></div></div>  <div class='bar-row'><span class='bar-label'>Pedro</span><div class='bar-track'><div class='bar-fill' style='width:100%; background:#3b82f6;'>R$ 50,00</div></div></div>  <div class='bar-row'><span class='bar-label'>Bia</span><div class='bar-track'><div class='bar-fill' style='width:50%; background:#f59e0b;'>R$ 25,00</div></div></div>  <div class='bar-row'><span class='bar-label'>Lucas</span><div class='bar-track'><div class='bar-fill' style='width:80%; background:#8b5cf6;'>R$ 40,00</div></div></div></div>", "subquestions": [{"id": "p78_s1", "text": "1. Quem economizou a MAIOR quantia de dinheiro?", "type": "radio", "options": [{"val": "pedro", "text": "Pedro (R$ 50,00)", "correct": true}, {"val": "lucas", "text": "Lucas (R$ 40,00)", "correct": false}, {"val": "alice", "text": "Alice (R$ 35,00)", "correct": false}, {"val": "bia", "text": "Bia (R$ 25,00)", "correct": false}], "explain": "Pedro guardou R$ 50,00, a maior barra do gráfico."}, {"id": "p78_s2", "text": "2. Qual é a DIFERENÇA entre o valor economizado por Pedro e por Bia?", "type": "input_number", "correct": 25, "unit": "reais", "prefix": "R$", "explain": "Diferença = Pedro (50) - Bia (25) = <strong>R$ 25,00</strong>."}, {"id": "p78_s3", "text": "3. Quanto os 4 amigos economizaram JUNTOS?", "type": "input_number", "correct": 150, "unit": "reais", "prefix": "R$", "explain": "Soma de todos: 35 + 50 + 25 + 40.<br>35 + 25 = 60.<br>50 + 40 = 90.<br>60 + 90 = <strong>R$ 150,00 economizados juntos</strong>!"}]}, {"id": "p79_q1", "page": "Página 79", "title": "O Simulador de Troco do Caixa com Menor Número de Notas", "story": "Como um caixa profissional, dê o troco usando o <strong>menor número possível de cédulas e moedas</strong>!", "subquestions": [{"id": "p79_s1", "text": "1. Compra de R$ 34,00 paga com uma nota de R$ 50,00. O troco é de R$ 16,00. Qual a menor quantidade de notas/moedas?", "type": "radio", "options": [{"val": "10_5_1", "text": "3 peças: 1 cédula de R$ 10 + 1 cédula de R$ 5 + 1 moeda de R$ 1", "correct": true}, {"val": "8x2", "text": "8 cédulas de R$ 2 (muitas cédulas)", "correct": false}, {"val": "16x1", "text": "16 moedas de R$ 1 (muitas moedas)", "correct": false}], "explain": "10 + 5 + 1 = 16 reais. São necessárias apenas 3 peças no total!"}, {"id": "p79_s2", "text": "2. Compra de R$ 142,00 paga com uma nota de R$ 200,00. Troco de R$ 58,00. Qual a menor combinação?", "type": "radio", "options": [{"val": "50_5_2_1", "text": "4 peças: 1 nota de R$ 50 + 1 nota de R$ 5 + 1 nota de R$ 2 + 1 moeda de R$ 1", "correct": true}, {"val": "2x20_18x1", "text": "Muitas notas de 20 e moedas", "correct": false}], "explain": "50 + 5 + 2 + 1 = 58 reais. Apenas 4 peças!"}]}, {"id": "p80_q1", "page": "Página 80", "title": "A Grande Prova dos Campeões Monetários", "story": "🌟 <strong>PARABÉNS POR CHEGAR ATÉ AQUI, ALICE!</strong><br>Este é o desafio final que reúne tudo o que aprendemos no Capítulo 9. Resolva estas duas questões finais para conquistar seu Troféu de Mestre!", "subquestions": [{"id": "p80_s1", "text": "1. Você tem uma nota de R$ 100,00. Compra 2 livros de R$ 35,00 cada e 1 lanche de R$ 12,00. Quanto vai sobrar de troco?", "type": "input_number", "correct": 18, "unit": "reais", "prefix": "R$", "explain": "Passo 1: Livros = 2 x 35 = R$ 70,00.<br>Passo 2: Total gasto = 70 + 12 = R$ 82,00.<br>Passo 3: Troco = 100 - 82 = <strong>R$ 18,00</strong>!"}, {"id": "p80_s2", "text": "2. Na conta 200 - 168 (as 3 bolas de R$ 56), por que o algarismo das dezenas do resultado é 3 e NÃO 4?", "type": "radio", "options": [{"val": "emprestou", "text": "Porque a dezena recebeu 10 da centena, mas teve que emprestar 1 para a unidade, ficando com 9 (9 - 6 = 3)", "correct": true}, {"val": "regra", "text": "Porque na matemática sempre se diminui 1 por diversão", "correct": false}], "explain": "Exatamente! Essa é a regra de ouro da subtração com empréstimo / recurso. O 10 virou 9 ao ceder para as unidades, logo 9 - 6 = 3. O troco é R$ 32,00!"}]}]}];
+
+    // State management via localStorage
+    const STORAGE_KEY = "alice_sistema_monetario_v2";
+    let appState = {
+      stars: 0,
+      goldCoins: 0,
+      completedSubquestions: {}, // id: true
+      completedQuestions: {}
+    };
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          appState = JSON.parse(raw);
+        }
+      } catch (e) {
+        console.warn("Storage load error:", e);
+      }
+      updateStarsUI();
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+      } catch (e) {
+        console.warn("Storage save error:", e);
+      }
+      updateStarsUI();
+    }
+
+    function updateStarsUI() {
+      const countEl = document.getElementById("stars-count");
+      if (countEl) {
+        countEl.textContent = appState.stars;
+      }
+      updateGoldCoinsUI();
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById("toast");
+      if (!t) return;
+      t.textContent = msg;
+      t.style.display = "block";
+      setTimeout(() => {
+        t.style.display = "none";
+      }, 3000);
+    }
+
+    function confirmReset() {
+      if (confirm("Quer reiniciar as estrelinhas para treinar tudo do zero?")) {
+        localStorage.removeItem(STORAGE_KEY);
+        appState = { stars: 0, goldCoins: 0, completedSubquestions: {}, completedQuestions: {} };
+        updateStarsUI();
+        if (activeMissionIndex !== null) {
+          renderStudyView(activeMissionIndex);
+        } else {
+          renderMenuCards();
+        }
+        showToast("Progresso reiniciado! Bons estudos, Alice!");
+      }
+    }
+
+    // =========================================================================
+    // AUDIO ENGINE (Web Audio API Synthesizer)
+    // =========================================================================
+    let audioCtx = null;
+    function getAudioContext() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      return audioCtx;
+    }
+
+    function playSuccessSound() {
+      try {
+        const ctx = getAudioContext();
+        if (ctx.state === 'suspended') ctx.resume();
+        const now = ctx.currentTime;
+        const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+        notes.forEach((freq, i) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(freq, now + i * 0.08);
+          gain.gain.setValueAtTime(0.2, now + i * 0.08);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.08 + 0.35);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now + i * 0.08);
+          osc.stop(now + i * 0.08 + 0.35);
+        });
+      } catch(e) {}
+    }
+
+    function playRetrySound() {
+      try {
+        const ctx = getAudioContext();
+        if (ctx.state === 'suspended') ctx.resume();
+        const now = ctx.currentTime;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(329.63, now); // E4
+        osc.frequency.linearRampToValueAtTime(261.63, now + 0.2); // C4
+        gain.gain.setValueAtTime(0.18, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.3);
+      } catch(e) {}
+    }
+
+    // =========================================================================
+    
+    // =========================================================================
+    // ENHANCED AUDIO ENGINE (Web Audio API Synthesizer)
+    // =========================================================================
+    let soundEnabled = true;
+
+    function toggleSound() {
+      soundEnabled = !soundEnabled;
+      const btn = document.getElementById("btn-sound-toggle");
+      if (btn) {
+        btn.textContent = soundEnabled ? "🔊" : "🔇";
+        btn.title = soundEnabled ? "Sons ativados (toque para silenciar)" : "Sons desativados (toque para ativar)";
+      }
+      showToast(soundEnabled ? "Efeitos sonoros ativados! 🔊" : "Efeitos sonoros silenciados! 🔇");
+    }
+
+    function playCoinSound() {
+      if (!soundEnabled) return;
+      try {
+        const ctx = getAudioContext();
+        if (ctx.state === 'suspended') ctx.resume();
+        const now = ctx.currentTime;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(987.77, now); // B5
+        osc.frequency.exponentialRampToValueAtTime(1318.51, now + 0.12); // E6
+        gain.gain.setValueAtTime(0.2, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.3);
+      } catch(e) {}
+    }
+
+    function playCashSound() {
+      if (!soundEnabled) return;
+      try {
+        const ctx = getAudioContext();
+        if (ctx.state === 'suspended') ctx.resume();
+        const now = ctx.currentTime;
+
+        // Clink 1
+        const osc1 = ctx.createOscillator();
+        const gain1 = ctx.createGain();
+        osc1.type = 'triangle';
+        osc1.frequency.setValueAtTime(1567.98, now); // G6
+        gain1.gain.setValueAtTime(0.25, now);
+        gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+        osc1.connect(gain1);
+        gain1.connect(ctx.destination);
+        osc1.start(now);
+        osc1.stop(now + 0.2);
+
+        // Clink 2 (high bell / ka-ching)
+        const osc2 = ctx.createOscillator();
+        const gain2 = ctx.createGain();
+        osc2.type = 'sine';
+        osc2.frequency.setValueAtTime(2093.00, now + 0.08); // C7
+        gain2.gain.setValueAtTime(0.3, now + 0.08);
+        gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
+        osc2.connect(gain2);
+        gain2.connect(ctx.destination);
+        osc2.start(now + 0.08);
+        osc2.stop(now + 0.45);
+      } catch(e) {}
+    }
+
+    function playCheerFanfare() {
+      if (!soundEnabled) return;
+      try {
+        const ctx = getAudioContext();
+        if (ctx.state === 'suspended') ctx.resume();
+        const now = ctx.currentTime;
+        const notes = [523.25, 659.25, 783.99, 1046.50, 1318.51]; // C5, E5, G5, C6, E6
+        notes.forEach((freq, i) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(freq, now + i * 0.09);
+          gain.gain.setValueAtTime(0.22, now + i * 0.09);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.09 + 0.4);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now + i * 0.09);
+          osc.stop(now + i * 0.09 + 0.4);
+        });
+      } catch(e) {}
+    }
+
+    // =========================================================================
+    // LIGHTWEIGHT CONFETTI PARTICLE SYSTEM
+    // =========================================================================
+    const confettiCanvas = document.getElementById("confetti-canvas");
+    const confCtx = confettiCanvas ? confettiCanvas.getContext("2d") : null;
+    let confettiParticles = [];
+    let confettiAnimId = null;
+
+    function resizeConfetti() {
+      if (!confettiCanvas) return;
+      confettiCanvas.width = window.innerWidth;
+      confettiCanvas.height = window.innerHeight;
+    }
+    window.addEventListener("resize", resizeConfetti);
+    resizeConfetti();
+
+    function launchConfetti(count = 70) {
+      if (!confettiCanvas || !confCtx) return;
+      resizeConfetti();
+      const colors = ['#f59e0b', '#10b981', '#3b82f6', '#ec4899', '#8b5cf6', '#f43f5e'];
+      for (let i = 0; i < count; i++) {
+        confettiParticles.push({
+          x: confettiCanvas.width / 2 + (Math.random() - 0.5) * 200,
+          y: confettiCanvas.height / 2 + (Math.random() - 0.5) * 100,
+          vx: (Math.random() - 0.5) * 16,
+          vy: (Math.random() - 1.2) * 16,
+          size: Math.random() * 8 + 6,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          rotation: Math.random() * 360,
+          vRot: (Math.random() - 0.5) * 10,
+          shape: Math.random() > 0.4 ? 'circle' : 'rect',
+          alpha: 1
+        });
+      }
+      if (!confettiAnimId) {
+        animateConfetti();
+      }
+    }
+
+    function animateConfetti() {
+      if (!confCtx) return;
+      confCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+      confettiParticles.forEach((p, idx) => {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.4; // gravity
+        p.rotation += p.vRot;
+        p.alpha -= 0.012;
+
+        confCtx.save();
+        confCtx.globalAlpha = Math.max(0, p.alpha);
+        confCtx.translate(p.x, p.y);
+        confCtx.rotate((p.rotation * Math.PI) / 180);
+        confCtx.fillStyle = p.color;
+
+        if (p.shape === 'circle') {
+          confCtx.beginPath();
+          confCtx.arc(0, 0, p.size / 2, 0, Math.PI * 2);
+          confCtx.fill();
+        } else {
+          confCtx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.6);
+        }
+        confCtx.restore();
+      });
+
+      confettiParticles = confettiParticles.filter(p => p.alpha > 0 && p.y < confettiCanvas.height + 50);
+
+      if (confettiParticles.length > 0) {
+        confettiAnimId = requestAnimationFrame(animateConfetti);
+      } else {
+        confettiAnimId = null;
+        confCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+      }
+    }
+
+    // =========================================================================
+    // MERCADINHO DA ALICE GAME ENGINE
+    // =========================================================================
+    let marketState = {
+      activeTab: 'troco',
+      currentStep: 1, // 1 to 3
+      goldCoins: 0,
+      
+      // Subgame 1 (Troco)
+      currentCustomer: null,
+      trayItems: [], // array of { val, type, label }
+      
+      // Subgame 2 (Exato)
+      exactTarget: 0,
+      exactTrayItems: [],
+      
+      // Subgame 3 (Cofrinho)
+      piggyAVal: 0,
+      piggyBVal: 0,
+      piggyWinner: null,
+      piggyAnswered: false
+    };
+
+    const CUSTOMERS_DATA = [
+      { name: "Ursinho Pipoca", avatar: "🐻", likes: "doces e picolés" },
+      { name: "Raposinha Nina", avatar: "🦊", likes: "lanches naturais" },
+      { name: "Gatinho Mingau", avatar: "🐱", likes: "frutas e sucos" },
+      { name: "Panda Bambo", avatar: "🐼", likes: "livros e gibis" },
+      { name: "Coelhinha Lilica", avatar: "🐰", likes: "bolos e cenourinhas" },
+      { name: "Leãozinho Léo", avatar: "🦁", likes: "sucos bem gelados" }
+    ];
+
+    const PRODUCTS_DATA = [
+      { name: "Picolé de Morango", icon: "🍦", price: 3.50, payOptions: [5.00, 10.00] },
+      { name: "Cupcake Colorido", icon: "🧁", price: 4.50, payOptions: [5.00, 10.00] },
+      { name: "Suco de Laranja Natural", icon: "🧃", price: 6.00, payOptions: [10.00, 20.00] },
+      { name: "Sanduíche Natural", icon: "🥪", price: 7.50, payOptions: [10.00, 20.00] },
+      { name: "Fatia de Melancia", icon: "🍉", price: 2.50, payOptions: [5.00, 10.00] },
+      { name: "Pacote de Biscoitos", icon: "🍪", price: 4.00, payOptions: [5.00, 10.00, 20.00] },
+      { name: "Gibi da Turminha", icon: "📚", price: 8.50, payOptions: [10.00, 20.00] },
+      { name: "Bolo de Cenoura", icon: "🍰", price: 5.50, payOptions: [10.00, 20.00] },
+      { name: "Chaveiro do Coelhinho", icon: "🧸", price: 12.00, payOptions: [20.00, 50.00] },
+      { name: "Caixa de Lápis de Cor", icon: "🎨", price: 14.50, payOptions: [20.00, 50.00] },
+      { name: "Bolinha Pula-Pula", icon: "⚽", price: 6.50, payOptions: [10.00, 20.00] },
+      { name: "Barra de Chocolate", icon: "🍫", price: 8.00, payOptions: [10.00, 20.00] }
+    ];
+
+    function formatBRL(val) {
+      return "R$ " + val.toFixed(2).replace(".", ",");
+    }
+
+    function updateGoldCoinsUI() {
+      const el = document.getElementById("gold-coins-count");
+      if (el) {
+        el.textContent = appState.goldCoins || 0;
+      }
+      const badge = document.getElementById("gold-coins-container");
+      if (badge) {
+        badge.classList.remove("bounce");
+        void badge.offsetWidth;
+        badge.classList.add("bounce");
+      }
+    }
+
+    function addGoldCoins(amt) {
+      if (!appState.goldCoins) appState.goldCoins = 0;
+      appState.goldCoins += amt;
+      saveState();
+      updateGoldCoinsUI();
+    }
+
+    function openMarketView() {
+      activeMissionIndex = null;
+      document.getElementById("menu-view").style.display = "none";
+      document.getElementById("study-view").style.display = "none";
+      document.getElementById("market-view").style.display = "block";
+
+      document.getElementById("btn-mode-islands").classList.remove("active");
+      document.getElementById("btn-mode-market").classList.add("active");
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      initMarketRound();
+    }
+
+    // Hook goHome to reset mode buttons
+    const _originalGoHome = goHome;
+    goHome = function() {
+      document.getElementById("market-view").style.display = "none";
+      document.getElementById("btn-mode-market").classList.remove("active");
+      document.getElementById("btn-mode-islands").classList.add("active");
+      _originalGoHome();
+    };
+
+    function switchMarketGame(type) {
+      marketState.activeTab = type;
+      ['troco', 'exato', 'cofrinho', 'quiz'].forEach(t => {
+        const tabBtn = document.getElementById("tab-" + t);
+        const panel = document.getElementById("subgame-" + t);
+        if (tabBtn) tabBtn.classList.toggle("active", t === type);
+        if (panel) panel.style.display = (t === type ? "block" : "none");
+      });
+      loadSubgameChallenge();
+    }
+
+    function updateRoundDotsUI() {
+      for (let i = 1; i <= 3; i++) {
+        const dot = document.getElementById("rd-" + i);
+        if (!dot) continue;
+        dot.classList.remove("current", "done");
+        if (i < marketState.currentStep) {
+          dot.classList.add("done");
+          dot.textContent = "✓";
+        } else if (i === marketState.currentStep) {
+          dot.classList.add("current");
+          dot.textContent = i;
+        } else {
+          dot.textContent = i;
+        }
+      }
+    }
+
+    function initMarketRound() {
+      marketState.currentStep = 1;
+      updateRoundDotsUI();
+      loadSubgameChallenge();
+    }
+
+    function loadSubgameChallenge() {
+      updateRoundDotsUI();
+      if (marketState.activeTab === 'troco') {
+        initTrocoChallenge();
+      } else if (marketState.activeTab === 'exato') {
+        initExactChallenge();
+      } else if (marketState.activeTab === 'cofrinho') {
+        initCofrinhoChallenge();
+      } else if (marketState.activeTab === 'quiz') {
+        initQuizChallenge();
+      }
+    }
+
+    function advanceMarketStep() {
+      if (marketState.currentStep < 3) {
+        marketState.currentStep++;
+        updateRoundDotsUI();
+        setTimeout(() => {
+          loadSubgameChallenge();
+        }, 1200);
+      } else {
+        // Round Complete!
+        setTimeout(() => {
+          showRoundWinModal();
+        }, 800);
+      }
+    }
+
+    function showRoundWinModal() {
+      playCheerFanfare();
+      launchConfetti(120);
+      addGoldCoins(30);
+      const m = document.getElementById("round-win-modal");
+      if (m) m.style.display = "flex";
+    }
+
+    function closeRoundWinModal() {
+      const m = document.getElementById("round-win-modal");
+      if (m) m.style.display = "none";
+      goHome();
+    }
+
+    function startNewRound() {
+      const m = document.getElementById("round-win-modal");
+      if (m) m.style.display = "none";
+      initMarketRound();
+    }
+
+    // =========================================================================
+    // SUBGAME 1: TROCO CERTO LOGIC
+    // =========================================================================
+    function initTrocoChallenge() {
+      marketState.trayItems = [];
+      updateTrayUI();
+      const fb = document.getElementById("troco-feedback");
+      if (fb) fb.style.display = "none";
+
+      const cust = CUSTOMERS_DATA[Math.floor(Math.random() * CUSTOMERS_DATA.length)];
+      const prod = PRODUCTS_DATA[Math.floor(Math.random() * PRODUCTS_DATA.length)];
+      const pay = prod.payOptions[Math.floor(Math.random() * prod.payOptions.length)];
+      const changeExpected = parseFloat((pay - prod.price).toFixed(2));
+
+      marketState.currentCustomer = {
+        name: cust.name,
+        avatar: cust.avatar,
+        prodName: prod.name,
+        prodIcon: prod.icon,
+        price: prod.price,
+        paid: pay,
+        change: changeExpected
+      };
+
+      document.getElementById("c-avatar").textContent = cust.avatar;
+      document.getElementById("c-name").textContent = cust.name;
+      document.getElementById("c-price-tag").textContent = formatBRL(prod.price);
+      document.getElementById("c-paid-tag").textContent = formatBRL(pay);
+
+      document.getElementById("c-dialogue").innerHTML = `
+        "Olá, Alice! Quero levar este <strong>${prod.name} ${prod.icon}</strong> por <strong>${formatBRL(prod.price)}</strong>.<br>
+        Paguei com <strong>${formatBRL(pay)}</strong> 💵. Quanto é o meu troco certinho?"
+      `;
+    }
+
+    function addMoneyToTray(val, type, label) {
+      playCoinSound();
+      marketState.trayItems.push({ val, type, label });
+      updateTrayUI();
+    }
+
+    function removeMoneyFromTray(index) {
+      playCoinSound();
+      marketState.trayItems.splice(index, 1);
+      updateTrayUI();
+    }
+
+    function clearTray() {
+      marketState.trayItems = [];
+      updateTrayUI();
+      const fb = document.getElementById("troco-feedback");
+      if (fb) fb.style.display = "none";
+    }
+
+    function getTraySum() {
+      const sum = marketState.trayItems.reduce((acc, item) => acc + item.val, 0);
+      return parseFloat(sum.toFixed(2));
+    }
+
+    function updateTrayUI() {
+      const container = document.getElementById("tray-items-container");
+      const totalEl = document.getElementById("tray-total-display");
+      const currentSum = getTraySum();
+
+      if (totalEl) totalEl.textContent = formatBRL(currentSum);
+      if (!container) return;
+
+      if (marketState.trayItems.length === 0) {
+        container.innerHTML = '<span class="tray-placeholder">Toque nas notas e moedas da gaveta abaixo para montar o troco!</span>';
+        return;
+      }
+
+      container.innerHTML = "";
+      marketState.trayItems.forEach((item, idx) => {
+        const chip = document.createElement("div");
+        chip.className = `tray-chip ${item.type}`;
+        chip.title = "Toque para remover da bandeja";
+        chip.onclick = () => removeMoneyFromTray(idx);
+        chip.innerHTML = `<span>${item.label}</span> <span class="chip-remove">✕</span>`;
+        container.appendChild(chip);
+      });
+    }
+
+    function submitChange() {
+      const currentSum = getTraySum();
+      const expected = marketState.currentCustomer.change;
+      const fb = document.getElementById("troco-feedback");
+      if (!fb) return;
+
+      if (Math.abs(currentSum - expected) < 0.001) {
+        // Exact Match!
+        playCashSound();
+        launchConfetti(60);
+        addGoldCoins(10);
+        fb.className = "market-feedback success";
+        fb.innerHTML = `🎉 <strong>Troco Perfeito!</strong> ${marketState.currentCustomer.name} agradece com um sorriso: <em>"Certinho, Alice! Ganhou +10 Moedas de Ouro!"</em>`;
+        fb.style.display = "block";
+        advanceMarketStep();
+      } else if (currentSum < expected) {
+        playRetrySound();
+        const diff = (expected - currentSum).toFixed(2);
+        fb.className = "market-feedback retry";
+        fb.innerHTML = `🔍 <strong>Faltam moedinhas!</strong> O troco correto é <strong>${formatBRL(expected)}</strong> (Conta: ${formatBRL(marketState.currentCustomer.paid)} - ${formatBRL(marketState.currentCustomer.price)}). Você colocou ${formatBRL(currentSum)}. Faltam ${formatBRL(parseFloat(diff))}!`;
+        fb.style.display = "block";
+      } else {
+        playRetrySound();
+        const diff = (currentSum - expected).toFixed(2);
+        fb.className = "market-feedback retry";
+        fb.innerHTML = `⚠️ <strong>Passou do valor!</strong> O troco certo é <strong>${formatBRL(expected)}</strong>, mas você colocou ${formatBRL(currentSum)}. Toque nas peças da bandeja para retirar ${formatBRL(parseFloat(diff))}!`;
+        fb.style.display = "block";
+      }
+    }
+
+    // =========================================================================
+    // SUBGAME 2: PAGAR VALOR EXATO LOGIC
+    // =========================================================================
+    const EXACT_TARGETS = [
+      { name: "Fatia de Bolo de Morango 🍰", val: 7.50 },
+      { name: "Kit de Canetinhas Coloridas 🖍️", val: 13.50 },
+      { name: "Picolé Gourmet de Frutas 🍦", val: 4.75 },
+      { name: "Livro de Passatempos 📖", val: 18.25 },
+      { name: "Ioiô Maluco 🪀", val: 9.50 },
+      { name: "Salada de Frutas Caprichada 🥣", val: 6.25 },
+      { name: "Revista em Quadrinhos 📚", val: 11.50 },
+      { name: "Ursinho Chaveiro 🧸", val: 16.00 }
+    ];
+
+    function initExactChallenge() {
+      marketState.exactTrayItems = [];
+      updateExactTrayUI();
+      const fb = document.getElementById("exato-feedback");
+      if (fb) fb.style.display = "none";
+
+      const cust = CUSTOMERS_DATA[Math.floor(Math.random() * CUSTOMERS_DATA.length)];
+      const targetObj = EXACT_TARGETS[Math.floor(Math.random() * EXACT_TARGETS.length)];
+      marketState.exactTarget = targetObj.val;
+
+      document.getElementById("ex-avatar").textContent = cust.avatar;
+      document.getElementById("ex-name").textContent = cust.name;
+      document.getElementById("ex-target-tag").textContent = formatBRL(targetObj.val);
+      document.getElementById("ex-dialogue").innerHTML = `
+        "Alice, quero comprar o <strong>${targetObj.name}</strong> por <strong>${formatBRL(targetObj.val)}</strong>.<br>
+        Separe no balcão as notas e moedas exatas para pagar sem troco!"
+      `;
+    }
+
+    function addMoneyToExactTray(val, type, label) {
+      playCoinSound();
+      marketState.exactTrayItems.push({ val, type, label });
+      updateExactTrayUI();
+    }
+
+    function removeMoneyFromExactTray(index) {
+      playCoinSound();
+      marketState.exactTrayItems.splice(index, 1);
+      updateExactTrayUI();
+    }
+
+    function clearExactTray() {
+      marketState.exactTrayItems = [];
+      updateExactTrayUI();
+      const fb = document.getElementById("exato-feedback");
+      if (fb) fb.style.display = "none";
+    }
+
+    function getExactTraySum() {
+      const sum = marketState.exactTrayItems.reduce((acc, item) => acc + item.val, 0);
+      return parseFloat(sum.toFixed(2));
+    }
+
+    function updateExactTrayUI() {
+      const container = document.getElementById("ex-tray-items-container");
+      const totalEl = document.getElementById("ex-tray-total-display");
+      const currentSum = getExactTraySum();
+
+      if (totalEl) totalEl.textContent = formatBRL(currentSum);
+      if (!container) return;
+
+      if (marketState.exactTrayItems.length === 0) {
+        container.innerHTML = '<span class="tray-placeholder">Toque nas notas e moedas da gaveta abaixo para atingir o valor exato!</span>';
+        return;
+      }
+
+      container.innerHTML = "";
+      marketState.exactTrayItems.forEach((item, idx) => {
+        const chip = document.createElement("div");
+        chip.className = `tray-chip ${item.type}`;
+        chip.title = "Toque para retirar do balcão";
+        chip.onclick = () => removeMoneyFromExactTray(idx);
+        chip.innerHTML = `<span>${item.label}</span> <span class="chip-remove">✕</span>`;
+        container.appendChild(chip);
+      });
+    }
+
+    function submitExactPayment() {
+      const currentSum = getExactTraySum();
+      const expected = marketState.exactTarget;
+      const fb = document.getElementById("exato-feedback");
+      if (!fb) return;
+
+      if (Math.abs(currentSum - expected) < 0.001) {
+        playCashSound();
+        launchConfetti(60);
+        addGoldCoins(10);
+        fb.className = "market-feedback success";
+        fb.innerHTML = `🎉 <strong>Valor Exato Perfeito!</strong> Pagamento conferido sem troco: +10 Moedas de Ouro!`;
+        fb.style.display = "block";
+        advanceMarketStep();
+      } else if (currentSum < expected) {
+        playRetrySound();
+        const diff = (expected - currentSum).toFixed(2);
+        fb.className = "market-feedback retry";
+        fb.innerHTML = `🔍 O valor pedido é <strong>${formatBRL(expected)}</strong>. Você colocou ${formatBRL(currentSum)}. Ainda faltam ${formatBRL(parseFloat(diff))}!`;
+        fb.style.display = "block";
+      } else {
+        playRetrySound();
+        const diff = (currentSum - expected).toFixed(2);
+        fb.className = "market-feedback retry";
+        fb.innerHTML = `⚠️ Passou do valor! Era para dar <strong>${formatBRL(expected)}</strong>, você colocou ${formatBRL(currentSum)}. Remova ${formatBRL(parseFloat(diff))} tocando nas peças.`;
+        fb.style.display = "block";
+      }
+    }
+
+    // =========================================================================
+    
+    // =========================================================================
+    // SUBGAME 4: QUIZ RÁPIDO DE CONCEITOS (42 QUESTÕES • 3 OPÇÕES)
+    // =========================================================================
+    const QUIZ_QUESTIONS = [
+      // 1. Origem do Dinheiro & Escambo
+      {
+        theme: "História do Dinheiro",
+        q: "Antes da invenção das moedas de metal e do papel-moeda, como as pessoas conseguiam as coisas que precisavam?",
+        options: [
+          { text: "Trocavam diretamente uma mercadoria por outra (Escambo)", correct: true },
+          { text: "Usavam cartões magnéticos de plástico", correct: false },
+          { text: "Pegavam tudo de graça porque nada tinha dono", correct: false }
+        ],
+        explain: "Isso se chama <strong>Escambo</strong>! Por exemplo: trocar um cesto de peixes por um saco de milho."
+      },
+      {
+        theme: "História do Dinheiro",
+        q: "Por que a prática do escambo (troca direta de mercadorias) começou a ficar difícil para as pessoas?",
+        options: [
+          { text: "Porque nem sempre uma pessoa queria a mercadoria que a outra tinha para oferecer", correct: true },
+          { text: "Porque acabou toda a comida do planeta Terra", correct: false },
+          { text: "Porque os animais não deixavam as pessoas fazerem trocas", correct: false }
+        ],
+        explain: "Se um pescador queria milho, mas o agricultor não queria peixe, a troca não acontecia!"
+      },
+      {
+        theme: "História do Dinheiro",
+        q: "Na Antiguidade, antes das moedas, qual tempero muito valioso era usado para pagar os trabalhadores (origem da palavra 'salário')?",
+        options: [
+          { text: "O Sal", correct: true },
+          { text: "O Açúcar refinado", correct: false },
+          { text: "A Pimenta-do-reino", correct: false }
+        ],
+        explain: "O <strong>Sal</strong> era tão precioso para conservar alimentos que virou moeda de troca (origem de 'salário')!"
+      },
+      {
+        theme: "História do Dinheiro",
+        q: "Por que as pessoas decidiram inventar as moedas de metal e as cédulas de papel?",
+        options: [
+          { text: "Para servir como uma medida de valor comum, fácil de carregar e aceita por todos", correct: true },
+          { text: "Porque o papel era mais pesado que sacos de trigo", correct: false },
+          { text: "Apenas para fazer brinquedos colecionáveis", correct: false }
+        ],
+        explain: "Com o dinheiro, todos sabem o valor das coisas e qualquer um pode comprar e vender facilmente."
+      },
+      {
+        theme: "História do Dinheiro",
+        q: "Qual foi a grande vantagem do papel-moeda (cédulas) em comparação com carregar muitas moedas de metal pesadas?",
+        options: [
+          { text: "As notas de papel são muito mais leves e fáceis de carregar na carteira", correct: true },
+          { text: "O papel nunca rasga e dura para sempre", correct: false },
+          { text: "As moedas de ouro derretiam no bolso com o calor", correct: false }
+        ],
+        explain: "As cédulas de papel permitiram transportar quantias grandes sem carregar sacos pesadíssimos de metal."
+      },
+
+      // 2. Formas Modernas de Pagamento
+      {
+        theme: "Formas de Pagamento",
+        q: "Qual é o nome do sistema moderno brasileiro que permite transferir dinheiro pelo celular em poucos segundos a qualquer hora?",
+        options: [
+          { text: "Pix", correct: true },
+          { text: "Escambo", correct: false },
+          { text: "Cheque de Papel", correct: false }
+        ],
+        explain: "O <strong>Pix</strong> é um meio eletrônico instantâneo criado pelo Banco Central do Brasil."
+      },
+      {
+        theme: "Formas de Pagamento",
+        q: "Quando uma pessoa paga um picolé usando o celular com Pix, ela precisou entregar cédulas ou moedas de papel/metal na hora?",
+        options: [
+          { text: "Não, o dinheiro transferido é digital e sai direto da conta do banco", correct: true },
+          { text: "Sim, o celular solta uma moedinha pelo buraquinho do fone", correct: false },
+          { text: "Sim, a loja sempre exige uma nota de R$ 2,00 para confirmar o Pix", correct: false }
+        ],
+        explain: "O Pix transfere valores digitais pela internet, sem necessidade de dinheiro físico na mão."
+      },
+      {
+        theme: "Formas de Pagamento",
+        q: "Quais são as três formas mais comuns de pagar compras no comércio hoje em dia?",
+        options: [
+          { text: "Dinheiro físico (cédulas/moedas), Cartões e Pix", correct: true },
+          { text: "Troca de galinhas, sacos de sal e pedras polidas", correct: false },
+          { text: "Figurinhas repetidas, conchas do mar e tampinhas", correct: false }
+        ],
+        explain: "Hoje usamos dinheiro físico, cartões eletrônicos e transferências pelo Pix!"
+      },
+      {
+        theme: "Formas de Pagamento",
+        q: "Para fazer um pagamento por Pix usando o celular, do que a pessoa precisa ter cadastrado no banco?",
+        options: [
+          { text: "Uma Chave Pix (como CPF, e-mail, telefone ou chave aleatória)", correct: true },
+          { text: "Uma foto de uma nota de 100 reais", correct: false },
+          { text: "Uma moeda de ouro verdadeira colada na tela", correct: false }
+        ],
+        explain: "A Chave Pix identifica a conta de quem vai receber o dinheiro com facilidade e segurança."
+      },
+      {
+        theme: "Formas de Pagamento",
+        q: "Se acabar a energia elétrica ou a internet de uma lojinha, qual forma de pagamento SEMPRE continua funcionando?",
+        options: [
+          { text: "Dinheiro físico (cédulas e moedas na mão)", correct: true },
+          { text: "Pix pelo aplicativo", correct: false },
+          { text: "Cartão de aproximação pela maquininha", correct: false }
+        ],
+        explain: "O dinheiro físico em cédulas e moedas funciona em qualquer lugar, mesmo sem internet ou luz!"
+      },
+
+      // 3. A Regra da Vírgula e o Símbolo R$
+      {
+        theme: "Regras do Dinheiro",
+        q: "Qual é o símbolo oficial do nosso dinheiro brasileiro, o Real?",
+        options: [
+          { text: "R$", correct: true },
+          { text: "US$", correct: false },
+          { text: "€", correct: false }
+        ],
+        explain: "O R é de Real e o cifrão ($) representa dinheiro. Juntos formam <strong>R$</strong>!"
+      },
+      {
+        theme: "Regras do Dinheiro",
+        q: "Na escrita de um valor como R$ 85,25, qual é a função da VÍRGULA?",
+        options: [
+          { text: "Separar a parte inteira em REAIS (à esquerda) da parte em CENTAVOS (à direita)", correct: true },
+          { text: "Serve apenas de enfeite para o número ficar bonito", correct: false },
+          { text: "Indica que o preço deve ser multiplicado por 10", correct: false }
+        ],
+        explain: "À esquerda da vírgula ficam os <strong>Reais</strong> (85) e à direita ficam os <strong>Centavos</strong> (25)!"
+      },
+      {
+        theme: "Regras do Dinheiro",
+        q: "Quantos centavos são necessários para formar exatamente R$ 1,00 (um real)?",
+        options: [
+          { text: "100 centavos", correct: true },
+          { text: "10 centavos", correct: false },
+          { text: "50 centavos", correct: false }
+        ],
+        explain: "O nome já diz tudo: <strong>CENTAVOS</strong> vem de cem! 100 centavos = R$ 1,00."
+      },
+      {
+        theme: "Regras do Dinheiro",
+        q: "Como se lê corretamente por extenso o valor escrito na etiqueta: R$ 120,50?",
+        options: [
+          { text: "Cento e vinte reais e cinquenta centavos", correct: true },
+          { text: "Doze reais e cinquenta centavos", correct: false },
+          { text: "Cento e dois reais e cinco centavos", correct: false }
+        ],
+        explain: "120 = Cento e vinte reais. 50 = Cinquenta centavos."
+      },
+      {
+        theme: "Regras do Dinheiro",
+        q: "Se um doce custa R$ 0,75, o que significa o zero antes da vírgula?",
+        options: [
+          { text: "Significa que o doce não custa nenhum real inteiro, apenas 75 centavos", correct: true },
+          { text: "Significa que o doce é gratuito e a loja dá de presente", correct: false },
+          { text: "Significa que o preço está com defeito", correct: false }
+        ],
+        explain: "Zero à esquerda da vírgula indica zero reais inteiros: o valor é de apenas 75 centavos!"
+      },
+
+      // 4. Cédulas, Moedas e Animais da Fauna
+      {
+        theme: "Animais das Notas",
+        q: "Qual animal da fauna brasileira está estampado na cédula de R$ 2,00?",
+        options: [
+          { text: "A Tartaruga-de-pente (marinha)", correct: true },
+          { text: "O Mico-leão-dourado", correct: false },
+          { text: "A Onça-pintada", correct: false }
+        ],
+        explain: "Na nota azulzinha de R$ 2,00 está a graciosa <strong>Tartaruga marinha</strong>!"
+      },
+      {
+        theme: "Animais das Notas",
+        q: "Qual linda ave com asas abertas aparece estampada na cédula roxa de R$ 5,00?",
+        options: [
+          { text: "A Garça", correct: true },
+          { text: "O Papagaio", correct: false },
+          { text: "O Tucano", correct: false }
+        ],
+        explain: "Na cédula de R$ 5,00 vemos a <strong>Garça</strong>, que vive pertinho das águas."
+      },
+      {
+        theme: "Animais das Notas",
+        q: "Qual ave de penas vermelhas e bico forte está estampada na nota de R$ 10,00?",
+        options: [
+          { text: "A Arara", correct: true },
+          { text: "A Coruja", correct: false },
+          { text: "O Pinguim", correct: false }
+        ],
+        explain: "Na cédula vermelha de R$ 10,00 está a belíssima <strong>Arara</strong> brasileira!"
+      },
+      {
+        theme: "Animais das Notas",
+        q: "Qual macaquinho dourado muito famoso está desenhado na cédula de R$ 20,00?",
+        options: [
+          { text: "O Mico-leão-dourado", correct: true },
+          { text: "O Macaco-prego", correct: false },
+          { text: "O Babuíno", correct: false }
+        ],
+        explain: "Na cédula amarela de R$ 20,00 brilha o simpático <strong>Mico-leão-dourado</strong>!"
+      },
+      {
+        theme: "Animais das Notas",
+        q: "Qual grande felino com manchas no corpo está estampado na cédula de R$ 50,00?",
+        options: [
+          { text: "A Onça-pintada", correct: true },
+          { text: "O Leão africano", correct: false },
+          { text: "O Tigre de bengala", correct: false }
+        ],
+        explain: "Na cédula de R$ 50,00 está a <strong>Onça-pintada</strong>, o maior felino do nosso continente!"
+      },
+      {
+        theme: "Animais das Notas",
+        q: "Qual peixe dos mares brasileiros está estampado na cédula azul de R$ 100,00?",
+        options: [
+          { text: "A Garoupa", correct: true },
+          { text: "O Tubarão-baleia", correct: false },
+          { text: "O Peixe-palhaço", correct: false }
+        ],
+        explain: "Na nota de R$ 100,00 está a <strong>Garoupa</strong>, um peixe marinho de grande porte."
+      },
+      {
+        theme: "Animais das Notas",
+        q: "Qual animal do Cerrado brasileiro foi escolhido para estampar a cédula de R$ 200,00?",
+        options: [
+          { text: "O Lobo-guará", correct: true },
+          { text: "A Capivara", correct: false },
+          { text: "O Tamanduá-bandeira", correct: false }
+        ],
+        explain: "Na cédula cinza de R$ 200,00 está o elegante <strong>Lobo-guará</strong> de pernas compridas!"
+      },
+
+      // 5. Cédulas e Moedas que NÃO existem ou saíram
+      {
+        theme: "Cédulas & Moedas",
+        q: "É possível pagar uma compra de 50 centavos usando APENAS UMA CÉDULA (nota de papel)?",
+        options: [
+          { text: "Não, porque não existem notas de centavos no Brasil (a menor cédula é de R$ 2,00)", correct: true },
+          { text: "Sim, existe nota de 50 centavos verde", correct: false },
+          { text: "Sim, qualquer moeda amassada vira nota", correct: false }
+        ],
+        explain: "Cuidado com a pegadinha! Não existem cédulas de centavos no Brasil, apenas moedas!"
+      },
+      {
+        theme: "Cédulas & Moedas",
+        q: "Qual das moedas abaixo SAIU de circulação e não é mais fabricada pela Casa da Moeda?",
+        options: [
+          { text: "Moeda de 1 centavo (R$ 0,01)", correct: true },
+          { text: "Moeda de 50 centavos", correct: false },
+          { text: "Moeda de 1 real", correct: false }
+        ],
+        explain: "A moedinha de <strong>1 centavo</strong> deixou de ser produzida em 2004 e não circula mais no comércio!"
+      },
+      {
+        theme: "Cédulas & Moedas",
+        q: "Qual das seguintes cédulas NÃO EXISTE no Sistema Monetário Brasileiro?",
+        options: [
+          { text: "Cédula de R$ 15,00", correct: true },
+          { text: "Cédula de R$ 20,00", correct: false },
+          { text: "Cédula de R$ 50,00", correct: false }
+        ],
+        explain: "Não existe cédula de 15 reais! As notas oficiais são: 2, 5, 10, 20, 50, 100 e 200 reais."
+      },
+      {
+        theme: "Cédulas & Moedas",
+        q: "A antiga cédula de R$ 1,00 (verde com o beija-flor) ainda é fabricada hoje em dia?",
+        options: [
+          { text: "Não, foi substituída pela moeda de R$ 1,00 feita de metal (dourada e prata)", correct: true },
+          { text: "Sim, é a nota mais impressa do Brasil", correct: false },
+          { text: "Sim, mas só pode ser usada em aeroportos", correct: false }
+        ],
+        explain: "A nota de 1 real foi aposentada e substituída pela durável moeda de 1 real bimetálica."
+      },
+
+      // 6. Ortografia & Armadilhas do Caderno
+      {
+        theme: "Ortografia do Caderno",
+        q: "Como se escreve corretamente o número 60 por extenso para preencher um recibo?",
+        options: [
+          { text: "Sessenta (com dois S no meio)", correct: true },
+          { text: "Assenta (com A no começo)", correct: false },
+          { text: "Cecenta (com dois C)", correct: false }
+        ],
+        explain: "Atenção à ortografia: escreve-se <strong>Sessenta</strong> (com S no início e SS no meio)!"
+      },
+      {
+        theme: "Ortografia do Caderno",
+        q: "Como se escreve corretamente a palavra 90 por extenso?",
+        options: [
+          { text: "Noventa (uma palavra só, com N e V)", correct: true },
+          { text: "No venta (separado em duas palavras)", correct: false },
+          { text: "Nouventa (com a letra U)", correct: false }
+        ],
+        explain: "Cuidado com o erro do caderno: <strong>Noventa</strong> é uma única palavra escrita com V!"
+      },
+      {
+        theme: "Ortografia do Caderno",
+        q: "Como se escreve corretamente a quantia de R$ 50,00 por extenso?",
+        options: [
+          { text: "Cinquenta reais", correct: true },
+          { text: "Sincoenta reais", correct: false },
+          { text: "Cinquenta reis", correct: false }
+        ],
+        explain: "Escreve-se <strong>Cinquenta reais</strong> (com C-I-N e terminação -enta)!"
+      },
+      {
+        theme: "Ortografia do Caderno",
+        q: "Ao escrever 'R$ 85,25' por extenso, qual é a forma completa e sem esquecer nada?",
+        options: [
+          { text: "Oitenta e cinco reais e vinte e cinco centavos", correct: true },
+          { text: "Oitenta e cinco reais e vinte centavos (esqueceu o cinco!)", correct: false },
+          { text: "Oitocentos e cinquenta e dois reais", correct: false }
+        ],
+        explain: "Atenção: não pode esquecer de escrever o 'cinco' nos centavos: <strong>vinte e cinco centavos</strong>!"
+      },
+
+      // 7. Cartão de Débito vs Cartão de Crédito
+      {
+        theme: "Débito vs Crédito",
+        q: "Quando uma pessoa paga um almoço usando o CARTÃO DE DÉBITO, o que acontece com o dinheiro?",
+        options: [
+          { text: "O dinheiro é descontado na mesma hora do saldo que a pessoa tem na conta do banco", correct: true },
+          { text: "O restaurante dá a comida de graça como presente", correct: false },
+          { text: "A pessoa só precisa pagar quando completar 18 anos", correct: false }
+        ],
+        explain: "No <strong>Débito</strong>, o dinheiro sai imediatamente da conta! Se não tiver saldo, não passa."
+      },
+      {
+        theme: "Débito vs Crédito",
+        q: "Como funciona o pagamento com o CARTÃO DE CRÉDITO?",
+        options: [
+          { text: "O banco empresta o dinheiro na hora e junta todos os gastos em uma fatura para pagar no mês seguinte", correct: true },
+          { text: "O cartão fabrica moedas de ouro dentro da maquininha", correct: false },
+          { text: "O cliente nunca precisa devolver o dinheiro ao banco", correct: false }
+        ],
+        explain: "No <strong>Crédito</strong>, o banco paga a loja e você paga a fatura ao banco no mês seguinte."
+      },
+      {
+        theme: "Débito vs Crédito",
+        q: "O que acontece se uma pessoa tentar passar um cartão de débito para uma compra de R$ 50,00, mas ela só tiver R$ 30,00 na conta?",
+        options: [
+          { text: "A compra não é aprovada por falta de saldo suficiente", correct: true },
+          { text: "A maquininha imprime uma cédula de R$ 20,00 de presente", correct: false },
+          { text: "O produto custará automaticamente R$ 30,00", correct: false }
+        ],
+        explain: "No débito você só pode gastar até o limite do saldo que tiver disponível no banco."
+      },
+      {
+        theme: "Débito vs Crédito",
+        q: "Qual é o grande cuidado que as famílias precisam ter com o uso do cartão de crédito?",
+        options: [
+          { text: "Não gastar mais do que o salário permite, para não acumular dívidas difíceis de pagar", correct: true },
+          { text: "Não passar o cartão em dias de chuva para não levar choque", correct: false },
+          { text: "Só usar o cartão em lojas de brinquedo", correct: false }
+        ],
+        explain: "Como a fatura só chega no mês seguinte, é preciso ter controle e planejamento financeiro!"
+      },
+
+      // 8. Orçamento Familiar, Saldo e Poupança
+      {
+        theme: "Orçamento & Economia",
+        q: "No orçamento de uma família, o que significam as ENTRADAS (ou receitas)?",
+        options: [
+          { text: "É todo o dinheiro que entra na casa (como salários do trabalho e rendas)", correct: true },
+          { text: "São as portas e portões de entrada da casa", correct: false },
+          { text: "São os boletos e contas de luz que chegam pelo correio", correct: false }
+        ],
+        explain: "<strong>Entradas</strong> é todo o dinheiro que a família recebe durante o mês pelo seu trabalho!"
+      },
+      {
+        theme: "Orçamento & Economia",
+        q: "O que são as DESPESAS (ou gastos) no orçamento da casa?",
+        options: [
+          { text: "São todos os pagamentos e contas do mês (aluguel, mercado, água, luz e transporte)", correct: true },
+          { text: "São os presentes que os vizinhos dão de graça", correct: false },
+          { text: "São os brinquedos velhos que foram guardados", correct: false }
+        ],
+        explain: "<strong>Despesas</strong> são as saídas de dinheiro necessárias para pagar as contas da família."
+      },
+      {
+        theme: "Orçamento & Economia",
+        q: "Quando a família do Lucas recebe R$ 3.000 de salário e gasta R$ 2.600 em despesas, o que é a sobra de R$ 400?",
+        options: [
+          { text: "Um Saldo Positivo (dinheiro que sobrou para economizar ou guardar na poupança)", correct: true },
+          { text: "Uma dívida atrasada", correct: false },
+          { text: "Um prejuízo que precisa ser jogado fora", correct: false }
+        ],
+        explain: "Quando as entradas são maiores que as despesas, temos um <strong>Saldo Positivo</strong> (economia)!"
+      },
+      {
+        theme: "Orçamento & Economia",
+        q: "Para que serve ter um cofrinho ou uma caderneta de poupança no banco?",
+        options: [
+          { text: "Para guardar dinheiro aos poucos e conseguir realizar um sonho ou meta futura", correct: true },
+          { text: "Apenas para fazer barulho sacudindo as moedas", correct: false },
+          { text: "Para esconder o dinheiro e nunca mais lembrar dele", correct: false }
+        ],
+        explain: "Poupar nos ajuda a planejar a compra de brinquedos, passeios e nos protege em imprevistos!"
+      },
+
+      // 9. Empreendedorismo, Compras, Custo, Lucro, À Vista e A Prazo
+      {
+        theme: "Empreendedorismo",
+        q: "A Alice e o João montaram uma barraca de limonada. O que é o CUSTO da barraca?",
+        options: [
+          { text: "O dinheiro que eles gastaram comprando limões, açúcar e copos descartáveis", correct: true },
+          { text: "O total de dinheiro que os clientes pagaram pelos sucos", correct: false },
+          { text: "O sorriso que eles deram aos clientes", correct: false }
+        ],
+        explain: "<strong>Custo</strong> é tudo o que você precisa gastar para conseguir produzir o produto!"
+      },
+      {
+        theme: "Empreendedorismo",
+        q: "O que é o FATURAMENTO (ou receita de vendas) de uma loja?",
+        options: [
+          { text: "O total de dinheiro que entrou no caixa com a venda de todos os produtos", correct: true },
+          { text: "A conta de luz que a loja tem que pagar", correct: false },
+          { text: "O troco que a loja esqueceu de devolver", correct: false }
+        ],
+        explain: "<strong>Faturamento</strong> é o dinheiro bruto total arrecadado com as vendas."
+      },
+      {
+        theme: "Empreendedorismo",
+        q: "Como se calcula o LUCRO real de um comerciante ou vendedor?",
+        options: [
+          { text: "Lucro = Faturamento das Vendas menos os Custos gastos", correct: true },
+          { text: "Lucro = Somar todos os preços e multiplicar por zero", correct: false },
+          { text: "Lucro é o mesmo que pegar dinheiro emprestado no banco", correct: false }
+        ],
+        explain: "<strong>Lucro = Vendas - Custos</strong>. É o dinheiro que sobra de verdade para o comerciante!"
+      },
+      {
+        theme: "Compras Inteligentes",
+        q: "Qual é a diferença entre comprar um produto À VISTA e comprar A PRAZO (parcelado)?",
+        options: [
+          { text: "À vista é pago tudo na hora (muitas vezes com desconto); a prazo é dividido em vários meses", correct: true },
+          { text: "À vista só pode ser comprado com óculos; a prazo só pode comprar à noite", correct: false },
+          { text: "Não existe diferença nenhuma, as duas palavras significam a mesma coisa", correct: false }
+        ],
+        explain: "<strong>À vista</strong> você paga na hora. <strong>A prazo</strong> você divide em parcelas nos próximos meses."
+      },
+      {
+        theme: "Compras Inteligentes",
+        q: "No supermercado, 1 sabonete avulso custa R$ 4,00 e o pacote com 3 custa R$ 9,00. Por que vale mais a pena comprar o pacote?",
+        options: [
+          { text: "Porque 3 avulsos custariam R$ 12,00, então no pacote a pessoa economiza R$ 3,00", correct: true },
+          { text: "Porque sabonetes no pacote cheiram a chocolate", correct: false },
+          { text: "Porque é proibido comprar sabonetes avulsos no Brasil", correct: false }
+        ],
+        explain: "Comparar preços nos ensina a economizar: R$ 12,00 - R$ 9,00 = <strong>R$ 3,00 de economia</strong>!"
+      }
+    ];
+
+    let currentQuizIndex = 0;
+    let quizAnswered = false;
+    let quizUsedIndices = [];
+
+    function initQuizChallenge() {
+      quizAnswered = false;
+      const fb = document.getElementById("quiz-feedback");
+      if (fb) fb.style.display = "none";
+
+      // Reset pool if all 42 used
+      if (quizUsedIndices.length >= QUIZ_QUESTIONS.length) {
+        quizUsedIndices = [];
+      }
+
+      // Pick random question not yet seen in this pool
+      let availableIndices = [];
+      for (let i = 0; i < QUIZ_QUESTIONS.length; i++) {
+        if (!quizUsedIndices.includes(i)) availableIndices.push(i);
+      }
+
+      currentQuizIndex = availableIndices[Math.floor(Math.random() * availableIndices.length)];
+      quizUsedIndices.push(currentQuizIndex);
+
+      const qObj = QUIZ_QUESTIONS[currentQuizIndex];
+      renderQuizQuestion(qObj);
+    }
+
+    function renderQuizQuestion(qObj) {
+      document.getElementById("qz-theme").textContent = qObj.theme;
+      document.getElementById("qz-question").innerHTML = `"${qObj.q}"`;
+
+      const container = document.getElementById("qz-options-container");
+      if (!container) return;
+      container.innerHTML = "";
+
+      const letters = ['A', 'B', 'C'];
+      qObj.options.forEach((opt, idx) => {
+        const btn = document.createElement("button");
+        btn.className = "quiz-opt-btn";
+        btn.id = "qz-btn-" + idx;
+        btn.onclick = () => chooseQuizOption(idx);
+        btn.innerHTML = `
+          <div class="quiz-opt-letter">${letters[idx]}</div>
+          <div class="quiz-opt-text">${opt.text}</div>
+        `;
+        container.appendChild(btn);
+      });
+    }
+
+    function chooseQuizOption(chosenIdx) {
+      if (quizAnswered) return;
+      quizAnswered = true;
+
+      const qObj = QUIZ_QUESTIONS[currentQuizIndex];
+      const fb = document.getElementById("quiz-feedback");
+      const isCorrect = qObj.options[chosenIdx].correct;
+
+      // Find correct index
+      const correctIdx = qObj.options.findIndex(o => o.correct);
+
+      // Style buttons
+      const chosenBtn = document.getElementById("qz-btn-" + chosenIdx);
+      const correctBtn = document.getElementById("qz-btn-" + correctIdx);
+
+      if (isCorrect) {
+        playCashSound();
+        launchConfetti(60);
+        addGoldCoins(10);
+        if (chosenBtn) chosenBtn.classList.add("correct");
+
+        if (fb) {
+          fb.className = "market-feedback success";
+          fb.innerHTML = `🎉 <strong>Resposta Exata, Alice!</strong> Corujinha Sabina celebra: <em>"${qObj.explain}"</em> +10 Moedas de Ouro!`;
+          fb.style.display = "block";
+        }
+        advanceMarketStep();
+      } else {
+        playRetrySound();
+        if (chosenBtn) chosenBtn.classList.add("wrong");
+        if (correctBtn) correctBtn.classList.add("correct");
+
+        if (fb) {
+          fb.className = "market-feedback retry";
+          fb.innerHTML = `💡 <strong>Dica da Sabina:</strong> A opção certa era a <strong>(${['A','B','C'][correctIdx]})</strong>. <em>${qObj.explain}</em> Vamos para a próxima!`;
+          fb.style.display = "block";
+        }
+        advanceMarketStep();
+      }
+    }
+
+    // SUBGAME 3: BATALHA DOS COFRINHOS LOGIC
+    // =========================================================================
+    function generatePiggyContent() {
+      const bills = [50, 20, 10, 5, 2];
+      const coins = [1.00, 0.50, 0.25, 0.10];
+      
+      let itemsDesc = [];
+      let total = 0;
+
+      // Pick 1 to 2 bills
+      const b1 = bills[Math.floor(Math.random() * bills.length)];
+      itemsDesc.push(`1 cédula de R$ ${b1}`);
+      total += b1;
+
+      if (Math.random() > 0.4) {
+        const b2 = [10, 5, 2][Math.floor(Math.random() * 3)];
+        itemsDesc.push(`1 cédula de R$ ${b2}`);
+        total += b2;
+      }
+
+      // Pick 1 to 3 coins
+      const c1Count = Math.floor(Math.random() * 3) + 1;
+      const c1Val = coins[Math.floor(Math.random() * coins.length)];
+      itemsDesc.push(`${c1Count} moeda(s) de ${c1Val === 1 ? 'R$ 1,00' : (c1Val*100) + '¢'}`);
+      total += c1Count * c1Val;
+
+      return {
+        descList: itemsDesc,
+        total: parseFloat(total.toFixed(2))
+      };
+    }
+
+    function initCofrinhoChallenge() {
+      marketState.piggyAnswered = false;
+      const fb = document.getElementById("cofrinho-feedback");
+      if (fb) fb.style.display = "none";
+
+      const cardA = document.getElementById("piggy-card-a");
+      const cardB = document.getElementById("piggy-card-b");
+      if (cardA) cardA.className = "piggy-card";
+      if (cardB) cardB.className = "piggy-card";
+
+      const totAEl = document.getElementById("piggy-a-total");
+      const totBEl = document.getElementById("piggy-b-total");
+      if (totAEl) totAEl.style.display = "none";
+      if (totBEl) totBEl.style.display = "none";
+
+      let pA = generatePiggyContent();
+      let pB = generatePiggyContent();
+
+      // Ensure they aren't equal
+      while (Math.abs(pA.total - pB.total) < 0.01) {
+        pB = generatePiggyContent();
+      }
+
+      marketState.piggyAVal = pA.total;
+      marketState.piggyBVal = pB.total;
+      marketState.piggyWinner = pA.total > pB.total ? 'A' : 'B';
+
+      const listA = document.getElementById("piggy-a-list");
+      const listB = document.getElementById("piggy-b-list");
+
+      if (listA) listA.innerHTML = pA.descList.map(item => `• ${item}`).join("<br>");
+      if (listB) listB.innerHTML = pB.descList.map(item => `• ${item}`).join("<br>");
+
+      if (totAEl) totAEl.textContent = formatBRL(pA.total);
+      if (totBEl) totBEl.textContent = formatBRL(pB.total);
+    }
+
+    function choosePiggy(chosen) {
+      if (marketState.piggyAnswered) return;
+      marketState.piggyAnswered = true;
+
+      const cardA = document.getElementById("piggy-card-a");
+      const cardB = document.getElementById("piggy-card-b");
+      const totAEl = document.getElementById("piggy-a-total");
+      const totBEl = document.getElementById("piggy-b-total");
+      const fb = document.getElementById("cofrinho-feedback");
+
+      if (totAEl) totAEl.style.display = "block";
+      if (totBEl) totBEl.style.display = "block";
+
+      const isCorrect = (chosen === marketState.piggyWinner);
+
+      if (isCorrect) {
+        playCashSound();
+        launchConfetti(60);
+        addGoldCoins(10);
+        if (chosen === 'A') cardA.classList.add("selected-correct");
+        else cardB.classList.add("selected-correct");
+
+        if (fb) {
+          fb.className = "market-feedback success";
+          fb.innerHTML = `🎉 <strong>Sensacional, Alice!</strong> O Cofrinho ${marketState.piggyWinner === 'A' ? 'Rosa' : 'Dourado'} tem mais dinheiro (${formatBRL(Math.max(marketState.piggyAVal, marketState.piggyBVal))} > ${formatBRL(Math.min(marketState.piggyAVal, marketState.piggyBVal))})! +10 Moedas de Ouro!`;
+          fb.style.display = "block";
+        }
+        advanceMarketStep();
+      } else {
+        playRetrySound();
+        if (chosen === 'A') cardA.classList.add("selected-wrong");
+        else cardB.classList.add("selected-wrong");
+
+        if (fb) {
+          fb.className = "market-feedback retry";
+          fb.innerHTML = `🔍 Veja a soma: O Cofrinho Rosa tem ${formatBRL(marketState.piggyAVal)} e o Cofrinho Dourado tem ${formatBRL(marketState.piggyBVal)}. O vencedor era o Cofrinho ${marketState.piggyWinner === 'A' ? 'Rosa' : 'Dourado'}! Vamos para o próximo!`;
+          fb.style.display = "block";
+        }
+        advanceMarketStep();
+      }
+    }
+
+    // NAVIGATION & VIEWS
+    // =========================================================================
+    let activeMissionIndex = null;
+
+    function goHome() {
+      activeMissionIndex = null;
+      document.getElementById("study-view").style.display = "none";
+      document.getElementById("menu-view").style.display = "block";
+      renderMenuCards();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function openMission(index) {
+      activeMissionIndex = index;
+      document.getElementById("menu-view").style.display = "none";
+      document.getElementById("study-view").style.display = "block";
+      renderStudyView(index);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function nextMission() {
+      if (activeMissionIndex < MISSIONS.length - 1) {
+        openMission(activeMissionIndex + 1);
+      } else {
+        goHome();
+      }
+    }
+
+    // =========================================================================
+    // MENU CARDS RENDERING
+    // =========================================================================
+    function renderMenuCards() {
+      const container = document.getElementById("islands-cards-container");
+      if (!container) return;
+      container.innerHTML = "";
+
+      MISSIONS.forEach((m, idx) => {
+        // Calculate completion
+        let totalSubs = 0;
+        let completedSubs = 0;
+        m.questions.forEach(q => {
+          q.subquestions.forEach(sq => {
+            totalSubs++;
+            if (appState.completedSubquestions[sq.id]) completedSubs++;
+          });
+        });
+        const pct = totalSubs > 0 ? Math.round((completedSubs / totalSubs) * 100) : 0;
+
+        const card = document.createElement("div");
+        card.className = "island-card";
+        card.onclick = () => openMission(idx);
+
+        card.innerHTML = `
+          <div>
+            <div class="island-card-header">
+              <div class="island-icon" style="background: ${m.color}20;">${m.icon}</div>
+              <div class="island-card-title">
+                <div class="island-pages">${m.pages_label}</div>
+                <h3>${m.title}</h3>
+              </div>
+            </div>
+            <div class="island-desc">${m.desc}</div>
+          </div>
+          <div class="island-footer">
+            <div class="island-progress">${completedSubs} / ${totalSubs} concluídos (${pct}%)</div>
+            <button class="btn-enter-island" onclick="event.stopPropagation(); openMission(${idx});">
+              ${pct === 100 ? 'Revisar ⭐' : 'Estudar ➔'}
+            </button>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    // =========================================================================
+    // STUDY VIEW RENDERING
+    // =========================================================================
+    function renderStudyView(mIndex) {
+      const m = MISSIONS[mIndex];
+      document.getElementById("m-pages").textContent = m.pages_label;
+      document.getElementById("m-title").textContent = m.title;
+      document.getElementById("m-desc").textContent = m.desc;
+
+      const qContainer = document.getElementById("questions-container");
+      qContainer.innerHTML = "";
+
+      let totalSubs = 0;
+      let completedSubs = 0;
+
+      m.questions.forEach((q, qIdx) => {
+        const isQDone = q.subquestions.every(sq => appState.completedSubquestions[sq.id]);
+        q.subquestions.forEach(sq => {
+          totalSubs++;
+          if (appState.completedSubquestions[sq.id]) completedSubs++;
+        });
+
+        const qCard = document.createElement("div");
+        qCard.className = "question-card " + (isQDone ? "done" : "");
+        qCard.id = "card_" + q.id;
+
+        let subHtml = "";
+        q.subquestions.forEach((sq, sqIdx) => {
+          const isDone = !!appState.completedSubquestions[sq.id];
+          subHtml += `
+            <div class="subquestion-item" id="sq_item_${sq.id}">
+              <div class="subquestion-text">${sq.text}</div>
+              <div id="controls_${sq.id}">
+                ${renderInputControls(sq)}
+              </div>
+              <div class="q-actions">
+                <button class="btn-check" id="btn_check_${sq.id}" onclick="checkSubquestion('${q.id}', '${sq.id}', ${mIndex})">
+                  ${isDone ? 'Conferido ⭐' : 'Conferir Resposta'}
+                </button>
+                <button class="btn-retry" id="btn_retry_${sq.id}" onclick="retrySubquestion('${sq.id}')">
+                  Tentar Novamente ↺
+                </button>
+              </div>
+              <div class="feedback-box" id="fb_${sq.id}"></div>
+            </div>
+          `;
+        });
+
+        let cadernoNotice = "";
+        if (q.caderno) {
+          cadernoNotice = `<div class="caderno-badge"><span>✏️</span> <span>${q.caderno}</span></div>`;
+        }
+
+        qCard.innerHTML = `
+          <div class="q-header">
+            <span class="q-page-badge">${q.page}</span>
+            <span class="q-status-badge ${isQDone ? 'complete' : 'pending'}" id="status_${q.id}">
+              ${isQDone ? 'Concluída ⭐' : 'Pendente'}
+            </span>
+          </div>
+          <h3 class="q-title">${q.title}</h3>
+          <div class="q-story">${q.story}</div>
+          ${subHtml}
+          ${cadernoNotice}
+        `;
+
+        qContainer.appendChild(qCard);
+      });
+
+      // Update progress
+      updateMissionProgress(completedSubs, totalSubs);
+
+      // Check if mission fully completed
+      const finishBanner = document.getElementById("mission-finish-card");
+      if (completedSubs === totalSubs && totalSubs > 0) {
+        finishBanner.style.display = "block";
+      } else {
+        finishBanner.style.display = "none";
+      }
+    }
+
+    function renderInputControls(sq) {
+      if (sq.type === "radio") {
+        return `
+          <div class="options-group">
+            ${sq.options.map(opt => `
+              <label class="option-label" onclick="handleOptionSelect(this)">
+                <input type="radio" name="input_${sq.id}" value="${opt.val}" />
+                <span>${opt.text}</span>
+              </label>
+            `).join("")}
+          </div>
+        `;
+      } else if (sq.type === "checkbox") {
+        return `
+          <div class="options-group">
+            ${sq.options.map(opt => `
+              <label class="option-label" onclick="handleCheckboxSelect(this)">
+                <input type="checkbox" name="input_${sq.id}" value="${opt.val}" />
+                <span>${opt.text}</span>
+              </label>
+            `).join("")}
+          </div>
+        `;
+      } else if (sq.type === "input_number") {
+        return `
+          <div class="input-wrapper">
+            ${sq.prefix ? `<span class="input-prefix">${sq.prefix}</span>` : ''}
+            <input type="number" step="any" class="alice-input" id="input_${sq.id}" placeholder="Digite o valor..." />
+            ${sq.unit ? `<span class="input-unit">${sq.unit}</span>` : ''}
+          </div>
+        `;
+      }
+      return "";
+    }
+
+    function handleOptionSelect(labelEl) {
+      const parent = labelEl.closest(".options-group");
+      if (!parent) return;
+      parent.querySelectorAll(".option-label").forEach(l => l.classList.remove("selected"));
+      labelEl.classList.add("selected");
+    }
+
+    function handleCheckboxSelect(labelEl) {
+      const cb = labelEl.querySelector("input[type='checkbox']");
+      if (cb && cb.checked) {
+        labelEl.classList.add("selected");
+      } else {
+        labelEl.classList.remove("selected");
+      }
+    }
+
+    // =========================================================================
+    // TWO-LAYER EVALUATION & STEP-BY-STEP FEEDBACK
+    // =========================================================================
+    function checkSubquestion(qId, sqId, mIndex) {
+      const m = MISSIONS[mIndex];
+      const q = m.questions.find(item => item.id === qId);
+      if (!q) return;
+      const sq = q.subquestions.find(item => item.id === sqId);
+      if (!sq) return;
+
+      let isCorrect = false;
+
+      if (sq.type === "radio") {
+        const checked = document.querySelector(`input[name="input_${sq.id}"]:checked`);
+        if (!checked) {
+          alert("Por favor, selecione uma opção antes de conferir!");
+          return;
+        }
+        const selectedOpt = sq.options.find(o => o.val === checked.value);
+        isCorrect = !!(selectedOpt && selectedOpt.correct);
+      } else if (sq.type === "checkbox") {
+        const checkedBoxes = Array.from(document.querySelectorAll(`input[name="input_${sq.id}"]:checked`)).map(c => c.value);
+        if (checkedBoxes.length === 0) {
+          alert("Por favor, selecione ao menos uma opção antes de conferir!");
+          return;
+        }
+        const correctVals = sq.options.filter(o => o.correct).map(o => o.val);
+        const hasAllCorrect = correctVals.every(v => checkedBoxes.includes(v));
+        const hasNoIncorrect = checkedBoxes.every(v => correctVals.includes(v));
+        isCorrect = hasAllCorrect && hasNoIncorrect;
+      } else if (sq.type === "input_number") {
+        const inputEl = document.getElementById("input_" + sq.id);
+        if (!inputEl || inputEl.value.trim() === "") {
+          alert("Por favor, digite sua resposta antes de conferir!");
+          return;
+        }
+        const val = parseFloat(inputEl.value.replace(",", "."));
+        isCorrect = Math.abs(val - sq.correct) < 0.01;
+      }
+
+      // Display feedback
+      const fbBox = document.getElementById("fb_" + sq.id);
+      const btnCheck = document.getElementById("btn_check_" + sq.id);
+      const btnRetry = document.getElementById("btn_retry_" + sq.id);
+
+      fbBox.style.display = "block";
+
+      if (isCorrect) {
+        playSuccessSound();
+        fbBox.className = "feedback-box correct";
+        fbBox.innerHTML = `
+          <div class="feedback-header">
+            <span>🎉</span> <span>Sensacional, Alice! Resposta Exata!</span>
+          </div>
+          <div class="explanation-body">
+            <strong>Passo a passo da conta / Explicação:</strong><br>
+            ${sq.explain}
+          </div>
+        `;
+        btnCheck.textContent = "Conferido ⭐";
+        btnCheck.style.background = "#059669";
+        btnRetry.style.display = "none";
+
+        if (!appState.completedSubquestions[sq.id]) {
+          appState.completedSubquestions[sq.id] = true;
+          appState.stars += 1;
+          saveState();
+          showToast("⭐ +1 Estrela conquistada!");
+        }
+      } else {
+        playRetrySound();
+        fbBox.className = "feedback-box incorrect";
+        fbBox.innerHTML = `
+          <div class="feedback-header">
+            <span>🤔</span> <span>Quase lá! Vamos revisar a lógica:</span>
+          </div>
+          <div class="explanation-body">
+            <strong>Dica e Resolução Passo a Passo:</strong><br>
+            ${sq.explain}
+          </div>
+        `;
+        btnRetry.style.display = "inline-block";
+      }
+
+      // Check if whole question is completed
+      const allQSubsDone = q.subquestions.every(s => appState.completedSubquestions[s.id]);
+      if (allQSubsDone) {
+        const qCard = document.getElementById("card_" + q.id);
+        if (qCard) qCard.classList.add("done");
+        const statusBadge = document.getElementById("status_" + q.id);
+        if (statusBadge) {
+          statusBadge.className = "q-status-badge complete";
+          statusBadge.textContent = "Concluída ⭐";
+        }
+      }
+
+      // Refresh progress bar
+      let totalSubs = 0;
+      let completedSubs = 0;
+      m.questions.forEach(qi => {
+        qi.subquestions.forEach(sqi => {
+          totalSubs++;
+          if (appState.completedSubquestions[sqi.id]) completedSubs++;
+        });
+      });
+      updateMissionProgress(completedSubs, totalSubs);
+
+      if (completedSubs === totalSubs && totalSubs > 0) {
+        const finishBanner = document.getElementById("mission-finish-card");
+        if (finishBanner) finishBanner.style.display = "block";
+      }
+    }
+
+    function retrySubquestion(sqId) {
+      const fbBox = document.getElementById("fb_" + sqId);
+      if (fbBox) fbBox.style.display = "none";
+      const btnRetry = document.getElementById("btn_retry_" + sqId);
+      if (btnRetry) btnRetry.style.display = "none";
+      const btnCheck = document.getElementById("btn_check_" + sqId);
+      if (btnCheck) btnCheck.textContent = "Conferir Resposta";
+
+      // Reset controls
+      const inputEl = document.getElementById("input_" + sqId);
+      if (inputEl) {
+        inputEl.value = "";
+        inputEl.focus();
+      }
+      const checkedRadio = document.querySelector(`input[name="input_${sqId}"]:checked`);
+      if (checkedRadio) checkedRadio.checked = false;
+      const checkedBoxes = document.querySelectorAll(`input[name="input_${sqId}"]:checked`);
+      checkedBoxes.forEach(cb => cb.checked = false);
+      const labels = document.querySelectorAll(`#controls_${sqId} .option-label`);
+      labels.forEach(l => l.classList.remove("selected"));
+    }
+
+    function updateMissionProgress(done, total) {
+      const bar = document.getElementById("m-progress-bar");
+      const label = document.getElementById("mission-progress-label");
+      if (total === 0) return;
+      const pct = Math.round((done / total) * 100);
+      if (bar) bar.style.width = pct + "%";
+      if (label) label.textContent = `Progresso da Ilha: ${done} / ${total} (${pct}%)`;
+    }
+
+    // =========================================================================
+    // PERMANENT REFERENCE GUIDE MODAL
+    // =========================================================================
+    function openRefModal() {
+      const modal = document.getElementById("ref-modal");
+      if (modal) modal.style.display = "flex";
+    }
+
+    function closeRefModal(e) {
+      if (e && e.target !== document.getElementById("ref-modal") && !e.target.classList.contains("btn-close-drawer")) {
+        return;
+      }
+      const modal = document.getElementById("ref-modal");
+      if (modal) modal.style.display = "none";
+    }
+
+    // =========================================================================
+    // THREE.JS 3D SCENE: 5 FLOATING ISLANDS WITH SPINNING GOLD COINS
+    // =========================================================================
+    function initThreeScene() {
+      const canvas = document.getElementById("three-canvas");
+      if (!canvas) return;
+
+      const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+      renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+      const scene = new THREE.Scene();
+
+      const camera = new THREE.PerspectiveCamera(45, canvas.clientWidth / canvas.clientHeight, 0.1, 100);
+      camera.position.set(0, 10, 24);
+      camera.lookAt(0, 1, 0);
+
+      // Lights
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.75);
+      scene.add(ambientLight);
+
+      const dirLight = new THREE.DirectionalLight(0xfff7ed, 0.9);
+      dirLight.position.set(10, 20, 10);
+      scene.add(dirLight);
+
+      // 5 Islands configuration
+      const islandConfigs = [
+        { x: -10, z: -2, color: 0x10b981, index: 0, title: "Ilha 1" },
+        { x: -5,  z: 3,  color: 0x3b82f6, index: 1, title: "Ilha 2" },
+        { x: 0,   z: -3, color: 0xf59e0b, index: 2, title: "Ilha 3" },
+        { x: 5,   z: 3,  color: 0x8b5cf6, index: 3, title: "Ilha 4" },
+        { x: 10,  z: -1, color: 0xec4899, index: 4, title: "Ilha 5" }
+      ];
+
+      const islandGroups = [];
+
+      islandConfigs.forEach(cfg => {
+        const group = new THREE.Group();
+        group.position.set(cfg.x, 0, cfg.z);
+        group.userData = { missionIndex: cfg.index, initialY: 0, hover: false };
+
+        // Island base (rocky bottom cone)
+        const rockGeo = new THREE.ConeGeometry(2.4, 2.2, 7);
+        rockGeo.rotateX(Math.PI);
+        const rockMat = new THREE.MeshLambertMaterial({ color: 0x78716c });
+        const rock = new THREE.Mesh(rockGeo, rockMat);
+        rock.position.y = -1.1;
+        group.add(rock);
+
+        // Island top (grass cylinder)
+        const grassGeo = new THREE.CylinderGeometry(2.5, 2.3, 0.6, 7);
+        const grassMat = new THREE.MeshLambertMaterial({ color: cfg.color });
+        const grass = new THREE.Mesh(grassGeo, grassMat);
+        grass.position.y = 0.3;
+        group.add(grass);
+
+        // Spinning 3D Gold Coin hovering above island
+        const coinGeo = new THREE.CylinderGeometry(0.8, 0.8, 0.15, 24);
+        coinGeo.rotateX(Math.PI / 2);
+        const coinMat = new THREE.MeshStandardMaterial({
+          color: 0xfbbf24,
+          metalness: 0.85,
+          roughness: 0.2
+        });
+        const coin = new THREE.Mesh(coinGeo, coinMat);
+        coin.position.y = 2.4;
+        group.add(coin);
+        group.userData.coin = coin;
+
+        // Small decorative trees/decorations
+        const trunkGeo = new THREE.CylinderGeometry(0.12, 0.15, 0.6, 5);
+        const trunkMat = new THREE.MeshLambertMaterial({ color: 0x78350f });
+        const trunk = new THREE.Mesh(trunkGeo, trunkMat);
+        trunk.position.set(-1, 0.8, 0.8);
+        group.add(trunk);
+
+        const leafGeo = new THREE.DodecahedronGeometry(0.5);
+        const leafMat = new THREE.MeshLambertMaterial({ color: 0x059669 });
+        const leaf = new THREE.Mesh(leafGeo, leafMat);
+        leaf.position.set(-1, 1.3, 0.8);
+        group.add(leaf);
+
+        scene.add(group);
+        islandGroups.push(group);
+      });
+
+      // Floating clouds
+      const clouds = [];
+      for (let i = 0; i < 6; i++) {
+        const cloudGeo = new THREE.DodecahedronGeometry(1.2 + Math.random() * 0.8);
+        const cloudMat = new THREE.MeshLambertMaterial({ color: 0xffffff, transparent: true, opacity: 0.85 });
+        const cloud = new THREE.Mesh(cloudGeo, cloudMat);
+        cloud.position.set((Math.random() - 0.5) * 30, 4 + Math.random() * 3, (Math.random() - 0.5) * 15);
+        scene.add(cloud);
+        clouds.push({ mesh: cloud, speed: 0.01 + Math.random() * 0.01 });
+      }
+
+      // Raycasting for interactive clicks
+      const raycaster = new THREE.Raycaster();
+      const mouse = new THREE.Vector2();
+
+      function onMouseMove(event) {
+        const rect = canvas.getBoundingClientRect();
+        mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+        mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+        raycaster.setFromCamera(mouse, camera);
+        const intersects = raycaster.intersectObjects(scene.children, true);
+
+        islandGroups.forEach(g => g.userData.hover = false);
+        canvas.style.cursor = "default";
+
+        if (intersects.length > 0) {
+          let obj = intersects[0].object;
+          while (obj.parent && obj.parent !== scene) {
+            obj = obj.parent;
+          }
+          if (obj.userData && obj.userData.missionIndex !== undefined) {
+            obj.userData.hover = true;
+            canvas.style.cursor = "pointer";
+          }
+        }
+      }
+
+      function onClick(event) {
+        const rect = canvas.getBoundingClientRect();
+        mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+        mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+        raycaster.setFromCamera(mouse, camera);
+        const intersects = raycaster.intersectObjects(scene.children, true);
+
+        if (intersects.length > 0) {
+          let obj = intersects[0].object;
+          while (obj.parent && obj.parent !== scene) {
+            obj = obj.parent;
+          }
+          if (obj.userData && obj.userData.missionIndex !== undefined) {
+            openMission(obj.userData.missionIndex);
+          }
+        }
+      }
+
+      canvas.addEventListener("mousemove", onMouseMove);
+      canvas.addEventListener("click", onClick);
+
+      // Resize handler
+      window.addEventListener("resize", () => {
+        if (!canvas) return;
+        const width = canvas.clientWidth;
+        const height = canvas.clientHeight;
+        if (width && height) {
+          camera.aspect = width / height;
+          camera.updateProjectionMatrix();
+          renderer.setSize(width, height, false);
+        }
+      });
+
+      // Animation loop
+      let clock = new THREE.Clock();
+
+      function animate() {
+        requestAnimationFrame(animate);
+        const t = clock.getElapsedTime();
+
+        // Animate floating islands
+        islandGroups.forEach((g, idx) => {
+          // Gentle bobbing
+          const targetY = (g.userData.hover ? 0.8 : 0) + Math.sin(t * 1.5 + idx) * 0.25;
+          g.position.y += (targetY - g.position.y) * 0.1;
+
+          // Rotate gold coin
+          if (g.userData.coin) {
+            g.userData.coin.rotation.z += 0.03;
+          }
+        });
+
+        // Animate clouds drifting
+        clouds.forEach(c => {
+          c.mesh.position.x += c.speed;
+          if (c.mesh.position.x > 18) c.mesh.position.x = -18;
+        });
+
+        renderer.render(scene, camera);
+      }
+
+      animate();
+    }
+
+    // =========================================================================
+    // INITIALIZATION
+    // =========================================================================
+    window.addEventListener("DOMContentLoaded", () => {
+      loadState();
+      renderMenuCards();
+
+      // Init Three.js after short delay to ensure canvas bounds
+      setTimeout(() => {
+        try {
+          initThreeScene();
+        } catch(e) {
+          console.warn("Three.js initialization notice:", e);
+        }
+      }, 100);
+    });
+  </script>
+<canvas id="confetti-canvas"></canvas>
+</body>
+</html>
