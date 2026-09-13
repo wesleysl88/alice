@@ -186,7 +186,7 @@
 
     /* 3D ISLAND MENU VIEW */
     #menu-view {
-      display: block;
+      display: none;
     }
 
     .hero-banner {
@@ -1214,7 +1214,7 @@
        MARKET VIEW CONTAINER
        ========================================================================= */
     #market-view {
-      display: none;
+      display: block;
       animation: fadeIn 0.3s ease;
     }
 
@@ -2632,7 +2632,7 @@
 
   <!-- TOP HEADER -->
   <header class="top-header">
-    <div class="brand-title" onclick="goHome()">
+    <div class="brand-title" onclick="openMarketView()">
       <span class="brand-icon">🌟</span>
       <span class="brand-text-full">Aventuras Monetárias da Alice</span>
       <span class="brand-text-short">Alice</span>
@@ -2640,16 +2640,15 @@
 
     <!-- HIBRIDO: MUDANÇA DE MODO -->
     <nav class="mode-tabs-header">
-      <button id="btn-mode-islands" class="btn-mode-tab active" onclick="goHome()">
+      <button id="btn-mode-market" class="btn-mode-tab active" onclick="openMarketView()">
+        <span>🛒</span>
+        <span class="mode-text mode-text-full">Mercadinho</span>
+        <span class="mode-text-short">Mercado</span>
+      </button>
+      <button id="btn-mode-islands" class="btn-mode-tab" onclick="goHome()">
         <span>🏝️</span>
         <span class="mode-text mode-text-full">Ilhas do Livro</span>
         <span class="mode-text-short">Ilhas</span>
-      </button>
-      <button id="btn-mode-market" class="btn-mode-tab" onclick="openMarketView()">
-        <span>🛒</span>
-        <span class="mode-text mode-text-full">Mercadinho Rápido</span>
-        <span class="mode-text-short">Mercado</span>
-        <span class="mode-badge">Novo!</span>
       </button>
     </nav>
 
@@ -5043,6 +5042,7 @@
     window.addEventListener("DOMContentLoaded", () => {
       loadState();
       renderMenuCards();
+      openMarketView();
 
       // Init Three.js after short delay to ensure canvas bounds
       setTimeout(() => {
