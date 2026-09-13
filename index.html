@@ -1096,19 +1096,29 @@
       text-transform: uppercase;
     }
 
-    .gold-coins-badge {
+    .allowance-badge {
       display: flex;
       align-items: center;
       gap: 6px;
-      background: #fef3c7;
-      border: 2px solid #f59e0b;
-      color: #92400e;
-      padding: 6px 14px;
+      background: #ecfdf5;
+      border: 2px solid #10b981;
+      color: #065f46;
+      padding: 6px 12px;
       border-radius: 999px;
       font-weight: 800;
-      font-size: 1.05rem;
-      box-shadow: 0 2px 6px rgba(245, 158, 11, 0.2);
-      transition: transform 0.2s ease;
+      font-size: 0.95rem;
+      box-shadow: 0 2px 6px rgba(16, 185, 129, 0.18);
+      white-space: nowrap;
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    .allowance-badge.complete {
+      background: #d1fae5;
+      border-color: #059669;
+    }
+
+    .allowance-badge.bounce {
+      transform: scale(1.15);
     }
 
     .gold-coins-badge.bounce {
@@ -2352,10 +2362,13 @@
       .header-actions {
         grid-area: actions;
         gap: 6px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
       }
 
       .stars-badge,
-      .gold-coins-badge {
+      .gold-coins-badge,
+      .allowance-badge {
         padding: 5px 10px;
         font-size: 0.95rem;
         gap: 4px;
@@ -2653,6 +2666,10 @@
     </nav>
 
     <div class="header-actions">
+      <div class="allowance-badge" id="allowance-badge" title="Mesada: R$ 0,10 por problema certo nas Ilhas ou no Mercadinho. Máximo R$ 10,00 por semana.">
+        <span>💵</span>
+        <span id="allowance-count">R$ 0,00/10</span>
+      </div>
       <div class="gold-coins-badge" id="gold-coins-container" title="Moedas de Ouro do Cofrinho da Alice">
         <span>🪙</span>
         <span id="gold-coins-count">0</span>
@@ -3150,22 +3167,104 @@
 
     // State management via localStorage
     const STORAGE_KEY = "alice_sistema_monetario_v2";
-    let appState = {
-      stars: 0,
-      goldCoins: 0,
-      completedSubquestions: {}, // id: true
-      completedQuestions: {}
-    };
+    const WEEKLY_ALLOWANCE_CAP = 10;
+    const ALLOWANCE_PER_QUESTION = 0.1;
+
+    function defaultAppState() {
+      return {
+        stars: 0,
+        goldCoins: 0,
+        completedSubquestions: {},
+        completedQuestions: {},
+        allowanceWeekId: "",
+        allowanceReais: 0,
+        allowanceQuestionIds: {}
+      };
+    }
+
+    function currentWeekId() {
+      const now = new Date();
+      const date = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()));
+      const day = date.getUTCDay() || 7;
+      date.setUTCDate(date.getUTCDate() + 4 - day);
+      const yearStart = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
+      const week = Math.ceil((((date - yearStart) / 86400000) + 1) / 7);
+      return date.getUTCFullYear() + "-W" + week;
+    }
+
+    function ensureAllowanceWeek() {
+      const weekId = currentWeekId();
+      if (appState.allowanceWeekId !== weekId) {
+        appState.allowanceWeekId = weekId;
+        appState.allowanceReais = 0;
+        appState.allowanceQuestionIds = {};
+      }
+      if (typeof appState.allowanceReais !== "number") appState.allowanceReais = 0;
+      if (!appState.allowanceQuestionIds) appState.allowanceQuestionIds = {};
+    }
+
+    function formatAllowance(val) {
+      return "R$ " + Number(val).toFixed(2).replace(".", ",");
+    }
+
+    function isAllowanceFull() {
+      return appState.allowanceReais >= WEEKLY_ALLOWANCE_CAP - 0.001;
+    }
+
+    function addWeeklyAllowance(questionId) {
+      ensureAllowanceWeek();
+      if (!questionId) return 0;
+      if (appState.allowanceQuestionIds[questionId]) return 0;
+      if (isAllowanceFull()) return 0;
+      appState.allowanceQuestionIds[questionId] = true;
+      const remaining = WEEKLY_ALLOWANCE_CAP - appState.allowanceReais;
+      const earned = Math.min(ALLOWANCE_PER_QUESTION, remaining);
+      appState.allowanceReais = Math.round((appState.allowanceReais + earned) * 100) / 100;
+      return earned;
+    }
+
+    function toastAllowanceIfEarned(earned) {
+      if (earned <= 0) return;
+      if (isAllowanceFull()) {
+        showToast("💵 Mesada completa: R$ 10,00 nesta semana!");
+      } else {
+        showToast("💵 +" + formatAllowance(earned) + " na mesada (" + formatAllowance(appState.allowanceReais) + "/10)");
+      }
+      updateAllowanceUI(true);
+    }
+
+    function updateAllowanceUI(animate) {
+      ensureAllowanceWeek();
+      const el = document.getElementById("allowance-count");
+      if (el) {
+        el.textContent = formatAllowance(appState.allowanceReais) + "/10";
+      }
+      const badge = document.getElementById("allowance-badge");
+      if (badge) {
+        badge.classList.toggle("complete", isAllowanceFull());
+        badge.title = isAllowanceFull()
+          ? "Mesada completa desta semana: R$ 10,00. Pode continuar treinando!"
+          : "Mesada: R$ 0,10 por problema certo nas Ilhas ou no Mercadinho. Máximo R$ 10,00 por semana.";
+        if (animate) {
+          badge.classList.remove("bounce");
+          void badge.offsetWidth;
+          badge.classList.add("bounce");
+        }
+      }
+    }
+
+    let appState = defaultAppState();
 
     function loadState() {
       try {
         const raw = localStorage.getItem(STORAGE_KEY);
         if (raw) {
-          appState = JSON.parse(raw);
+          appState = Object.assign(defaultAppState(), JSON.parse(raw));
         }
       } catch (e) {
         console.warn("Storage load error:", e);
       }
+      ensureAllowanceWeek();
       updateStarsUI();
     }
 
@@ -3184,6 +3283,7 @@
         countEl.textContent = appState.stars;
       }
       updateGoldCoinsUI();
+      updateAllowanceUI();
     }
 
     function showToast(msg) {
@@ -3199,7 +3299,7 @@
     function confirmReset() {
       if (confirm("Quer reiniciar as estrelinhas para treinar tudo do zero?")) {
         localStorage.removeItem(STORAGE_KEY);
-        appState = { stars: 0, goldCoins: 0, completedSubquestions: {}, completedQuestions: {} };
+        appState = defaultAppState();
         updateStarsUI();
         if (activeMissionIndex !== null) {
           renderStudyView(activeMissionIndex);
@@ -3695,7 +3795,9 @@
         // Exact Match!
         playCashSound();
         launchConfetti(60);
+        const earned = addWeeklyAllowance("mercado:troco:" + marketState.currentCustomer.price + ":" + marketState.currentCustomer.paid);
         addGoldCoins(10);
+        toastAllowanceIfEarned(earned);
         fb.className = "market-feedback success";
         fb.innerHTML = `🎉 <strong>Troco Perfeito!</strong> ${marketState.currentCustomer.name} agradece com um sorriso: <em>"Certinho, Alice! Ganhou +10 Moedas de Ouro!"</em>`;
         fb.style.display = "block";
@@ -3805,7 +3907,9 @@
       if (Math.abs(currentSum - expected) < 0.001) {
         playCashSound();
         launchConfetti(60);
+        const earned = addWeeklyAllowance("mercado:exato:" + expected);
         addGoldCoins(10);
+        toastAllowanceIfEarned(earned);
         fb.className = "market-feedback success";
         fb.innerHTML = `🎉 <strong>Valor Exato Perfeito!</strong> Pagamento conferido sem troco: +10 Moedas de Ouro!`;
         fb.style.display = "block";
@@ -4347,7 +4451,9 @@
       if (isCorrect) {
         playCashSound();
         launchConfetti(60);
+        const earned = addWeeklyAllowance("mercado:quiz:" + currentQuizIndex);
         addGoldCoins(10);
+        toastAllowanceIfEarned(earned);
         if (chosenBtn) chosenBtn.classList.add("correct");
 
         if (fb) {
@@ -4457,7 +4563,9 @@
       if (isCorrect) {
         playCashSound();
         launchConfetti(60);
+        const earned = addWeeklyAllowance("mercado:cofrinho:" + marketState.piggyAVal + ":" + marketState.piggyBVal);
         addGoldCoins(10);
+        toastAllowanceIfEarned(earned);
         if (chosen === 'A') cardA.classList.add("selected-correct");
         else cardB.classList.add("selected-correct");
 
@@ -4750,11 +4858,24 @@
         btnCheck.style.background = "#059669";
         btnRetry.style.display = "none";
 
-        if (!appState.completedSubquestions[sq.id]) {
+        const firstStar = !appState.completedSubquestions[sq.id];
+        if (firstStar) {
           appState.completedSubquestions[sq.id] = true;
           appState.stars += 1;
-          saveState();
-          showToast("⭐ +1 Estrela conquistada!");
+        }
+        const earned = addWeeklyAllowance("ilha:" + sq.id);
+        saveState();
+        if (earned > 0 && firstStar) {
+          showToast(isAllowanceFull()
+            ? "⭐ +1 estrela  ·  💵 Mesada completa: R$ 10!"
+            : "⭐ +1 estrela  ·  💵 +" + formatAllowance(earned) + " na mesada");
+          updateAllowanceUI(true);
+        } else if (earned > 0) {
+          toastAllowanceIfEarned(earned);
+        } else if (firstStar) {
+          showToast(isAllowanceFull()
+            ? "⭐ +1 Estrela  ·  mesada da semana já está completa"
+            : "⭐ +1 Estrela conquistada!");
         }
       } else {
         playRetrySound();
